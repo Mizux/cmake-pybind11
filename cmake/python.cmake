@@ -1,22 +1,8 @@
-# Use latest UseSWIG module (3.14) and Python3 module (3.18)
+# Use latest Python3 module (3.18)
 cmake_minimum_required(VERSION 3.18)
-
-# Will need swig
-set(CMAKE_SWIG_FLAGS)
-find_package(SWIG REQUIRED)
-include(UseSWIG)
-
-if(${SWIG_VERSION} VERSION_GREATER_EQUAL 4)
-  list(APPEND CMAKE_SWIG_FLAGS "-doxygen")
-endif()
-
-if(UNIX AND NOT APPLE)
-  list(APPEND CMAKE_SWIG_FLAGS "-DSWIGWORDSIZE64")
-endif()
 
 # Find Python 3
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
-list(APPEND CMAKE_SWIG_FLAGS "-py3" "-DPY3")
 
 # Find if the python module is available,
 # otherwise install it (PACKAGE_NAME) to the Python3 user install directory.
@@ -102,7 +88,7 @@ function(search_python_internal_module)
   endif()
 endfunction()
 
-set(PYTHON_PROJECT pythonnative)
+set(PYTHON_PROJECT cmakepybind11)
 message(STATUS "Python project: ${PYTHON_PROJECT}")
 set(PYTHON_PROJECT_DIR ${PROJECT_BINARY_DIR}/python/${PYTHON_PROJECT})
 message(STATUS "Python project build path: ${PYTHON_PROJECT_DIR}")

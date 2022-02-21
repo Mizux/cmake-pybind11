@@ -2,14 +2,14 @@
 '''Test APIs'''
 
 import unittest
-import pythonnative
-from pythonnative.bar import pyBar
-#import pythonnative.bar.pyBar as bar
+import cmakepybind11
+from cmakepybind11.bar import pyBar
+#import cmakepybind11.bar.pyBar as bar
 
 if __debug__:
-    print(f'version: {pythonnative.__version__}')
-    print(f'pythonnative: ${dir(pythonnative)}')
-    print(f'pythonnative.bar: ${dir(pythonnative.bar)}')
+    print(f'version: {cmakepybind11.__version__}')
+    print(f'cmakepybind11: ${dir(cmakepybind11)}')
+    print(f'cmakepybind11.bar: ${dir(cmakepybind11.bar)}')
     print(f'pyBar: ${dir(pyBar)}')
 
 

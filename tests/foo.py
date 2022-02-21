@@ -2,14 +2,14 @@
 '''Test APIs'''
 
 import unittest
-import pythonnative
-from pythonnative.foo import pyFoo
-#import pythonnative.foo.pyFoo as foo
+import cmakepybind11
+from cmakepybind11.foo import pyFoo
+#import cmakepybind11.foo.pyFoo as foo
 
 if __debug__:
-    print(f'version: {pythonnative.__version__}')
-    print(f'pythonnative: ${dir(pythonnative)}')
-    print(f'pythonnative.foo: ${dir(pythonnative.foo)}')
+    print(f'version: {cmakepybind11.__version__}')
+    print(f'cmakepybind11: ${dir(cmakepybind11)}')
+    print(f'cmakepybind11.foo: ${dir(cmakepybind11.foo)}')
     print(f'pyFoo: ${dir(pyFoo)}')
 
 
