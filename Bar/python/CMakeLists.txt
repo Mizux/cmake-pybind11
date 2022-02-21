@@ -1,5 +1,20 @@
 pybind11_add_module(pyBar MODULE pyBar.cpp)
+# note: macOS is APPLE and also UNIX !
+if(APPLE)
+  set_target_properties(pyBar PROPERTIES
+    SUFFIX ".so"
+    INSTALL_RPATH "@loader_path;@loader_path/../../${PYTHON_PROJECT}/.libs"
+    )
+  set_property(TARGET pyBar APPEND PROPERTY
+    LINK_FLAGS "-flat_namespace -undefined suppress"
+    )
+elseif(UNIX)
+  set_target_properties(pyBar PROPERTIES
+    INSTALL_RPATH "$ORIGIN:$ORIGIN/../../${PYTHON_PROJECT}/.libs"
+    )
+endif()
 target_link_libraries(pyBar PRIVATE ${PROJECT_NAMESPACE}::Bar)
+add_library(${PROJECT_NAMESPACE}::pyBar ALIAS pyBar)
 
 #set_property(SOURCE bar.i PROPERTY CPLUSPLUS ON)
 #set_property(SOURCE bar.i PROPERTY SWIG_MODULE_NAME pyBar)

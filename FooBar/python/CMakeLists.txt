@@ -1,13 +1,20 @@
-#Python3_add_library(pyFooBar pyFooBar.cpp)
-#target_link_libraries(pyFooBar PRIVATE pybind11::headers)
-#target_link_libraries(pyFooBar PRIVATE ${PROJECT_NAMESPACE}::FooBar)
-#set_target_properties(pyFooBar PROPERTIES
-#  INTERPROCEDURAL_OPTIMIZATION ON
-#  CXX_VISIBILITY_PRESET ON
-#  VISIBLITY_INLINES_HIDDEN ON)
-
 pybind11_add_module(pyFooBar MODULE pyFooBar.cpp)
+# note: macOS is APPLE and also UNIX !
+if(APPLE)
+  set_target_properties(pyFooBar PROPERTIES
+    SUFFIX ".so"
+    INSTALL_RPATH "@loader_path;@loader_path/../../${PYTHON_PROJECT}/.libs"
+    )
+  set_property(TARGET pyFooBar APPEND PROPERTY
+    LINK_FLAGS "-flat_namespace -undefined suppress"
+    )
+elseif(UNIX)
+  set_target_properties(pyFooBar PROPERTIES
+    INSTALL_RPATH "$ORIGIN:$ORIGIN/../../${PYTHON_PROJECT}/.libs"
+    )
+endif()
 target_link_libraries(pyFooBar PRIVATE ${PROJECT_NAMESPACE}::FooBar)
+add_library(${PROJECT_NAMESPACE}::pyFooBar ALIAS pyFooBar)
 
 #set_property(SOURCE foobar.i PROPERTY CPLUSPLUS ON)
 #set_property(SOURCE foobar.i PROPERTY SWIG_MODULE_NAME pyFooBar)

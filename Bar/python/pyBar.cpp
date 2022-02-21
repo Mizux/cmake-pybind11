@@ -19,9 +19,9 @@ PYBIND11_MODULE(pyBar, m) {
     m.def("string_jagged_array_ref_input", &::bar::stringJaggedArrayRefInput, "A function that use a jagged array of string const ref.");
 
     // Vector of Pair
-    m.def("pair_vectorOutput", &::bar::pairVectorOutput, "A function that return a vector of pair.");
-    m.def("pair_vectorInput", &::bar::pairVectorInput, "A function that use a vector of pair.");
-    m.def("pair_vectorRefInput", &::bar::pairVectorRefInput, "A function that use a vector of pair const ref.");
+    m.def("pair_vector_output", &::bar::pairVectorOutput, "A function that return a vector of pair.");
+    m.def("pair_vector_input", &::bar::pairVectorInput, "A function that use a vector of pair.");
+    m.def("pair_vector_ref_input", &::bar::pairVectorRefInput, "A function that use a vector of pair const ref.");
 
     // Vector of Vector of Pair
     m.def("pair_jagged_array_output", &::bar::pairJaggedArrayOutput, "A function that return a jagged array of pair.");
@@ -29,8 +29,8 @@ PYBIND11_MODULE(pyBar, m) {
     m.def("pair_jagged_array_ref_input", &::bar::pairJaggedArrayRefInput, "A function that use a jagged array of pair const ref.");
 
     // Free Function
-    m.def("free_function", &::bar::pairJaggedArrayOutput, "A function that return a jagged array of pair.");
-    m.def("free_function", &::bar::pairJaggedArrayInput, "A function that use a jagged array of pair.");
+    m.def("free_function", py::overload_cast<int>(&::bar::freeFunction), "A free function taking an int.");
+    m.def("free_function", py::overload_cast<int64_t>(&::bar::freeFunction), "A free function taking an int64.");
 
     // Class Bar
     py::class_<::bar::Bar>(m, "Bar")
