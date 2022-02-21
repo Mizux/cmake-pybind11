@@ -1,4 +1,4 @@
-PROJECT := python-native
+PROJECT := cmake-pybind11
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 SHA1 := $(shell git rev-parse --verify HEAD)
 
