@@ -82,16 +82,16 @@ class TestpyFoo(unittest.TestCase):
     def test_pyFoo_int_methods(self):
         f = pyFoo.Foo()
         f.int = 13
-        self.assertEqual(f.int, 13)
+        self.assertEqual(13, f.int)
         f.int = 17
-        self.assertEqual(f.int, 17)
+        self.assertEqual(17, f.int)
 
     def test_pyFoo_int64_methods(self):
         f = pyFoo.Foo()
         f.int64 = 31
-        self.assertEqual(f.int64, 31)
+        self.assertEqual(31, f.int64)
         f.int64 = 42
-        self.assertEqual(f.int64, 42)
+        self.assertEqual(42, f.int64)
 
 
 if __name__ == '__main__':

@@ -103,7 +103,7 @@ class FooBar {
 
   /*! @brief Method (getter) of FooBar class.
    * @return A member value.*/
-  int getInt() const;
+  const int getInt() const;
   /*! @brief Method (setter) of Bar nested class.
    * @param[in] input A member value.*/
   void setBarInt(int input);
@@ -118,7 +118,7 @@ class FooBar {
 
   /*! @brief Method (getter) of FooBar class.
    * @return A member value.*/
-  int64_t getInt64() const;
+  const int64_t getInt64() const;
   /*! @brief Set value of internal Bar nested class.
    * @param[in] input A member value.*/
   void setBarInt64(int64_t input);

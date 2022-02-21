@@ -20,35 +20,56 @@ class TestpyBar(unittest.TestCase):
         pyBar.free_function(2147483647+1) # max int + 1
 
     def test_string_vector(self):
-        v = pyBar.string_vector_output(3)
-        self.assertEqual(3, len(v))
+        self.assertEqual(4, pyBar.string_vector_input(["1", "2", "3", "4"]))
+
+        self.assertEqual(
+            5, pyBar.string_vector_ref_input(["1", "2", "3", "4", "5"]))
+
+        res = pyBar.string_vector_output(3)
+        if __debug__:
+            print(f"res: {res}")
+        self.assertEqual(3, len(res))
 
     def test_string_jagged_array(self):
+        self.assertEqual(
+            3,
+            pyBar.string_jagged_array_input([['1'], ['2', '3'],
+                                             ['4', '5', '6']]))
+
+        self.assertEqual(
+            4,
+            pyBar.string_jagged_array_ref_input([['1'], ['2', '3'],
+                                                 ['4', '5', '6'], ['7']]))
+
         v = pyBar.string_jagged_array_output(5)
         self.assertEqual(5, len(v))
         for i in range(5):
-            self.assertEqual(i+1, len(v[i]))
-        self.assertEqual(
-                3,
-                pyBar.string_jagged_array_input([['1'],['2','3'],['4','5','6']]))
-
-    def test_int_pair(self):
-        p = pyBar.IntPair(3, 5)
-        if __debug__:
-            print(f"class IntPair: {dir(p)}")
-        self.assertEqual(3, p[0])
-        self.assertEqual(5, p[1])
-        self.assertEqual(f'{p}', '(3, 5)')
+            self.assertEqual(i + 1, len(v[i]))
 
     def test_pair_vector(self):
-        v = pyBar.pair_vector_output(3)
-        self.assertEqual(3, len(v))
+        self.assertEqual(3, pyBar.pair_vector_input([(1, 2), (3, 4), (5, 6)]))
+
+        self.assertEqual(3,
+                         pyBar.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
+
+        res = pyBar.pair_vector_output(3)
+        if __debug__:
+            print(f"res: {res}")
+        self.assertEqual(3, len(res))
 
     def test_pair_jagged_array(self):
-        v = pyBar.pair_jagged_array_output(5)
-        self.assertEqual(5, len(v))
+        self.assertEqual(
+            2, pyBar.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
+
+        self.assertEqual(
+            2, pyBar.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]]))
+
+        res = pyBar.pair_jagged_array_output(5)
+        if __debug__:
+            print(f"res: {res}")
+        self.assertEqual(5, len(res))
         for i in range(5):
-            self.assertEqual(i+1, len(v[i]))
+            self.assertEqual(i + 1, len(res[i]))
 
     def test_pyBar_static_methods(self):
         f = pyBar.Bar()
@@ -56,17 +77,22 @@ class TestpyBar(unittest.TestCase):
             print(f'class Bar: ${dir(f)}')
         f.static_function(1)
         f.static_function(2147483647)
-        f.static_function(2147483647+1)
+        f.static_function(2147483647 + 1)
 
     def test_pyBar_int_methods(self):
         f = pyBar.Bar()
-        f.set_int(13)
-        self.assertEqual(f.get_int(), 13)
+        f.int = 13
+        self.assertEqual(f.int, 13)
+        f.int = 17
+        self.assertEqual(f.int, 17)
 
     def test_pyBar_int64_methods(self):
         f = pyBar.Bar()
-        f.set_int64(31)
-        self.assertEqual(f.get_int64(), 31)
+        f.int64 = 31
+        self.assertEqual(f.int64, 31)
+        f.int64 = 42
+        self.assertEqual(f.int64, 42)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

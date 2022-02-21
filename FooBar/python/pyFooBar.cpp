@@ -37,11 +37,11 @@ PYBIND11_MODULE(pyFooBar, m) {
       .def(py::init<>())
       .def_static("static_function", py::overload_cast<int>(&::foobar::FooBar::staticFunction))
       .def_static("static_function", py::overload_cast<int64_t>(&::foobar::FooBar::staticFunction))
-      .def("get_int", &::foobar::FooBar::getInt)
-      .def("set_bar_int", &::foobar::FooBar::setBarInt)
-      .def("set_foo_int", &::foobar::FooBar::setFooInt)
-      .def("get_int64", &::foobar::FooBar::getInt64)
-      .def("set_bar_int64", &::foobar::FooBar::setBarInt64)
-      .def("set_foo_int64", &::foobar::FooBar::setFooInt64)
+      .def_property("int", &::foobar::FooBar::getInt, nullptr)
+      .def_property("bar_int", nullptr, &::foobar::FooBar::setBarInt)
+      .def_property("foo_int", nullptr, &::foobar::FooBar::setFooInt)
+      .def_property("int64", &::foobar::FooBar::getInt64, nullptr)
+      .def_property("bar_int64", nullptr, &::foobar::FooBar::setBarInt64)
+      .def_property("foo_int64", nullptr, &::foobar::FooBar::setFooInt64)
       .def("__str__", &::foobar::FooBar::operator());
 }

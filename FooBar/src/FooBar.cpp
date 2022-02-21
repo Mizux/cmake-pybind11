@@ -182,7 +182,7 @@ void FooBar::staticFunction(int64_t level) {
   std::cout << "[" << level << "] Exit " << __func__ << "(int64_t)" << std::endl;
 }
 
-int FooBar::getInt() const {
+const int FooBar::getInt() const {
   return _bar.getInt() + _foo.getInt();
 }
 
@@ -194,7 +194,7 @@ void FooBar::setFooInt(int input) {
   _foo.setInt(input);
 }
 
-int64_t FooBar::getInt64() const {
+const int64_t FooBar::getInt64() const {
   return _bar.getInt64() + _foo.getInt64();
 }
 
