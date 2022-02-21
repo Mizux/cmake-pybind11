@@ -64,15 +64,17 @@ include(CTest)
 
 include(cpp)
 
-if(WIN32)
-  message(STATUS "Getting SWIG: ...")
-  include(swig)
-  message(STATUS "Getting SWIG: ...DONE")
-endif()
+option(BUILD_pybind11 "Build pybind11 library" ON)
+message(STATUS "Build pybind11: ${BUILD_pybind11}")
+
+# Build Needed dependencies
+add_subdirectory(cmake/dependencies dependencies)
+#list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
 
 option(FETCH_PYTHON_DEPS "Install python required modules if not available" ON)
 message(STATUS "Python fetch dependencies: ${FETCH_PYTHON_DEPS}")
 
+include(deps)
 include(python)
 
 add_subdirectory(tests)
