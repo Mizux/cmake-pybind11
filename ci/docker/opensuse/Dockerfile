@@ -9,11 +9,6 @@ RUN zypper update -y \
 && zypper clean -a
 ENV CC=gcc CXX=g++
 
-# Install swig
-RUN zypper update -y \
-&& zypper install -y swig \
-&& zypper clean -a
-
 # Install Python
 RUN zypper update -y \
 && zypper install -y python3 python3-pip python3-devel \
@@ -37,7 +32,7 @@ RUN cmake --build build --target test -v
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
 RUN python3 -m pip install --find-links=. \
- pythonnative*.whl
+ cmakepybind11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/samples

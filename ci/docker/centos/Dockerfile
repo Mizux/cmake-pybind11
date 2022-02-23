@@ -10,22 +10,6 @@ RUN dnf -y update \
 && dnf clean all \
 && rm -rf /var/cache/dnf
 
-# Install SWIG 4.0.2
-RUN dnf -y update \
-&& dnf -y install pcre-devel \
-&& dnf clean all \
-&& rm -rf /var/cache/dnf \
-&& wget -q "https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz" -O swig-4.0.2.tar.gz \
-&& tar xvf swig-4.0.2.tar.gz \
-&& rm swig-4.0.2.tar.gz \
-&& cd swig-4.0.2 \
-&& ./autogen.sh \
-&& ./configure --prefix=/usr \
-&& make -j 4 \
-&& make install \
-&& cd .. \
-&& rm -rf swig-4.0.2
-
 # Install Python
 RUN dnf -y update \
 && dnf -y install python39-devel \
@@ -50,7 +34,7 @@ RUN cmake --build build --target test -v
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
 RUN python3 -m pip install --find-links=. \
- pythonnative*.whl
+ cmakepybind11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/sample

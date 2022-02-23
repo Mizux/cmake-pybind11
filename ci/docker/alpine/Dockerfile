@@ -6,9 +6,6 @@ LABEL maintainer="mizux.dev@gmail.com"
 ENV PATH=/usr/local/bin:$PATH
 RUN apk add --no-cache git build-base linux-headers cmake
 
-# Install swig
-RUN apk add --no-cache swig
-
 # Install Python
 RUN apk add --no-cache python3-dev py3-pip
 
@@ -30,7 +27,7 @@ RUN cmake --build build --target test -v
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
 RUN python3 -m pip install --find-links=. \
- pythonnative*.whl
+ cmakepybind11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/samples

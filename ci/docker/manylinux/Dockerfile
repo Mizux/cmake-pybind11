@@ -13,27 +13,11 @@ RUN yum -y update \
 && yum clean all \
 && rm -rf /var/cache/yum
 
-# Install CMake 3.21.4
-RUN wget --no-check-certificate "https://cmake.org/files/v3.21/cmake-3.21.4-linux-aarch64.sh" \
-&& chmod a+x cmake-3.21.4-linux-aarch64.sh \
-&& ./cmake-3.21.4-linux-aarch64.sh --prefix=/usr/local/ --skip-license \
-&& rm cmake-3.21.4-linux-aarch64.sh
-
-# Install SWIG 4.0.2
-RUN yum -y update \
-&& yum -y install pcre-devel \
-&& yum clean all \
-&& rm -rf /var/cache/yum \
-&& wget -q "https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz" -O swig-4.0.2.tar.gz \
-&& tar xvf swig-4.0.2.tar.gz \
-&& rm swig-4.0.2.tar.gz \
-&& cd swig-4.0.2 \
-&& ./autogen.sh \
-&& ./configure --prefix=/usr \
-&& make -j 4 \
-&& make install \
-&& cd .. \
-&& rm -rf swig-4.0.2
+# Install CMake 3.22.2
+RUN wget --no-check-certificate "https://cmake.org/files/v3.22/cmake-3.22.2-linux-aarch64.sh" \
+&& chmod a+x cmake-3.22.2-linux-aarch64.sh \
+&& ./cmake-3.22.2-linux-aarch64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.22.2-linux-aarch64.sh
 
 # Add the library src to our build env
 FROM env AS devel
@@ -49,7 +33,8 @@ RUN ./build-manylinux.sh test
 
 FROM env AS install_env
 COPY --from=build /home/project/build*/python/dist/*.whl ./
-RUN python3 -m pip install --find-links=. pythonnative*.whl
+RUN python3 -m pip install --find-links=. \
+ cmakepybind11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/sample

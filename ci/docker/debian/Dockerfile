@@ -9,22 +9,6 @@ RUN apt-get update -qq \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install swig
-RUN apt-get update -qq \
-&& apt-get install -yq libpcre3-dev automake bison \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN wget -q "https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz" -O swig-4.0.2.tar.gz \
-&& tar xvf swig-4.0.2.tar.gz \
-&& rm swig-4.0.2.tar.gz \
-&& cd swig-4.0.2 \
-&& ./autogen.sh \
-&& ./configure --prefix=/usr \
-&& make -j 4 \
-&& make install \
-&& cd .. \
-&& rm -rf swig-4.0.2
-
 # Install Python
 RUN apt-get update -qq \
 && apt-get install -yq python3-dev python3-pip python3-venv \
@@ -49,7 +33,7 @@ RUN cmake --build build --target test -v
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
 RUN python3 -m pip install --find-links=. \
- pythonnative*.whl
+ cmakepybind11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/samples
