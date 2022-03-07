@@ -8,6 +8,9 @@ set(BUILD_TESTING OFF)
 # ##############################################################################
 # pybind11
 # ##############################################################################
+# Find Python 3
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
+
 if(BUILD_pybind11)
   message(CHECK_START "Fetching pybind11")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
