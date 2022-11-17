@@ -53,7 +53,7 @@ ref: https://github.com/docker-library/official-images#architectures-other-than-
 ### Docker buildx
 ref: https://docs.docker.com/buildx/working-with-buildx/
 
-On you enable qemu support (see above), you can list available platform using:
+Once you enable QEMU support (see above), you can list available platform using:
 ```sh
 docker buildx ls
 ```
