@@ -65,7 +65,7 @@ The project layout is as follow:
     * [src/Foo.cpp](Foo/src/Foo.cpp)
   * [python](Foo/python)
     * [CMakeLists.txt](Foo/python/CMakeLists.txt) for `Foo` Python.
-    * [foo.i](Foo/python/foo.i) SWIG Python wrapper.
+    * [pyFoo.cpp](Foo/python/pyFoo.cpp) Pybind Python wrapper.
 * [Bar](Bar) Root directory for `Bar` library.
   * [CMakeLists.txt](Bar/CMakeLists.txt) for `Bar`.
   * [include](Bar/include) public folder.
@@ -75,7 +75,7 @@ The project layout is as follow:
     * [src/Bar.cpp](Bar/src/Bar.cpp)
   * [python](Bar/python)
     * [CMakeLists.txt](Bar/python/CMakeLists.txt) for `Bar` Python.
-    * [bar.i](Bar/python/bar.i) SWIG Python wrapper.
+    * [pyBar.cpp](Bar/python/pyBar.cpp) Pybind Python wrapper.
 * [FooBar](FooBar) Root directory for `FooBar` library.
   * [CMakeLists.txt](FooBar/CMakeLists.txt) for `FooBar`.
   * [include](FooBar/include) public folder.
@@ -85,7 +85,7 @@ The project layout is as follow:
     * [src/FooBar.cpp](FooBar/src/FooBar.cpp)
   * [python](FooBar/python)
     * [CMakeLists.txt](FooBar/python/CMakeLists.txt) for `FooBar` Python.
-    * [foobar.i](FooBar/python/foobar.i) SWIG Python wrapper.
+    * [pyFooBar.cpp](FooBar/python/pyFooBar.cpp) Pybind Python wrapper.
 
 * [python](python) Root directory for Python template files
   * [`setup.py.in`](python/setup.py.in) setup.py template for the Python native package.
@@ -114,8 +114,8 @@ The pipeline for `linux-x86-64` should be as follow:<br>
 ![Legend](docs/legend.svg)
 
 #### Building local native Package
-Thus we have the C++ shared library `libFoo.so` and the SWIG generated
-Python wrappers e.g. `pyfoo.py` in the same package.
+Thus we have the C++ shared library `libFoo.so` and the pybind11
+Python shared library e.g. `pyFoo.so` in the same package.
 
 Here some dev-note concerning this `setup.py`.
 * This package is a native package containing native libraries.
@@ -123,13 +123,13 @@ Here some dev-note concerning this `setup.py`.
 Then you can generate the package and install it locally using:
 ```bash
 python3 setup.py bdist_wheel
-python3 -m pip install --user --find-links=dist pythonnative
+python3 -m pip install --user --find-links=dist cmakepybind11
 ```
 
 If everything good the package (located in `<buildir>/python/dist`) should have
 this layout:
 ```
-{...}/dist/pythonnative-X.Y.9999-cp3Z-cp3Z-<platform>.whl:
+{...}/dist/cmakepybind11-X.Y.9999-cp3Z-cp3Z-<platform>.whl:
 \- pythonnative
    \- __init__.py
    \- .libs
@@ -137,8 +137,7 @@ this layout:
       \- ...
    \- foo
       \- __init__.py
-      \- pyFoo.py
-      \- _pyFoo.so
+      \- pyFoo.so
 ...
 ```
 note: `<platform>` could be `manylinux2014_x86_64`, `macosx_10_9_x86_64` or `win-amd64`.
