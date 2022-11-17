@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
   set -x
   pkg update -f
   pkg install -y git cmake swig
-  pkg install -y python38 py38-setuptools py38-wheel py38-pytest-virtualenv
+  pkg install -y python39 py39-setuptools py39-wheel py39-pytest-virtualenv
   SHELL
   config.vm.provision "devel", type: "shell", inline:<<-SHELL
   set -x
