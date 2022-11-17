@@ -13,16 +13,13 @@ digraph Legend {
     CPP [label="Foo.cpp", shape=note, fillcolor=royalblue];
     CPP_LGD [label=": C++ source file", color=none];
     CPP -> CPP_LGD [arrowhead=none, style=invisible];
-    LIB [label="Foo.so", shape=component, fillcolor=royalblue];
+    LIB [label="libFoo.so", shape=component, fillcolor=royalblue];
     LIB_LGD [label=": Shared library (i.e. binary)", color=none];
     LIB -> LIB_LGD [arrowhead=none, style=invisible];
 
     # Python Stuff
-    PYTHON [label="pyfoo.py", shape=note, fillcolor=gold];
-    PYTHON_LGD [label=": Python source file", color=none];
-    PYTHON -> PYTHON_LGD [arrowhead=none, style=invisible];
-    PYWRP [label="_pyfoo.so", shape=component, fillcolor=gold];
-    PYWRP_LGD [label=": C++ wrapper output (i.e. binary)", color=none];
+    PYWRP [label="pyfoo.so", shape=component, fillcolor=gold];
+    PYWRP_LGD [label=": C++ pybind wrapper shared library (i.e. binary)", color=none];
     PYWRP -> PYWRP_LGD [arrowhead=none, style=invisible];
     WHL [label="pythonnative-<version>-cp3*-cp3*-<platform>.whl", shape=folder, fillcolor=gold];
     WHL_LGD [label=": Python package file (i.e. wheel archive)", color=none];
