@@ -32,7 +32,7 @@ This is an example of how to create a Modern [CMake](https://cmake.org/) C++/Pyt
 This project aim to explain how you build a Python 3.6+ native wheel package using
  [`Python3`](https://www.python.org/doc/) and a [setup.py](https://setuptools.readthedocs.io/en/latest/userguide/quickstart.html).<br>
 e.g. You have a cross platform C++ library (using a CMake based build) and a
-Python wrapper on it thanks to SWIG.<br>
+Python wrapper on it thanks to [`Pybind11`](https://github.com/pybind/pybind11).<br>
 Then you want to provide a cross-platform Python packages to consume it in a
 Python project...
 
@@ -45,6 +45,7 @@ You'll need:
 * "CMake >= 3.18".
 * "Python >= 3.6" and python module 'pip' (ed "setuptools" and "wheel" will be
  auto installed on demand).
+* "Pybind11 >= 2.10".
 
 ## Codemap
 
