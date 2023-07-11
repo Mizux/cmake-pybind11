@@ -32,7 +32,9 @@ RUN cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install --find-links=. \
+RUN python3 -m pip install \
+ --find-links=. \
+ --break-system-packages \
  cmakepybind11*.whl
 
 FROM install_env AS install_devel
