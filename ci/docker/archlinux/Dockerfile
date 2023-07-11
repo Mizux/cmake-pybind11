@@ -6,7 +6,8 @@ ENV PATH=/usr/local/bin:$PATH
 RUN pacman -Syu --noconfirm git base-devel cmake
 
 # Install Python
-RUN pacman -Syu --noconfirm python python-pip
+RUN pacman -Syu --noconfirm \
+ python python-pip python-setuptools python-virtualenv
 
 # Add the library src to our build env
 FROM env AS devel

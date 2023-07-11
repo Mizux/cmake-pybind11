@@ -11,7 +11,7 @@ RUN dnf -y update \
 
 # Install Python
 RUN dnf -y update \
-&& dnf -y install python39-devel \
+&& dnf -y install python3.11-devel python3.11-pip \
 && dnf clean all \
 && rm -rf /var/cache/dnf
 

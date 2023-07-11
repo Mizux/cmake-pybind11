@@ -3,16 +3,17 @@
 FROM ubuntu:rolling AS env
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN apt-get update -q \
-&& DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+RUN apt update -q \
+&& DEBIAN_FRONTEND=noninteractive apt install -yq \
  git wget libssl-dev build-essential cmake \
-&& apt-get clean \
+&& apt clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python
-RUN apt-get update -qq \
-&& DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-dev python3-pip python3-venv \
-&& apt-get clean \
+RUN apt update -q \
+&& DEBIAN_FRONTEND=noninteractive apt install -yq \
+ python3-dev python3-pip python3-venv python3-virtualenv \
+&& apt clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 FROM env AS devel
