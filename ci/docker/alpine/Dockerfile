@@ -6,7 +6,9 @@ ENV PATH=/usr/local/bin:$PATH
 RUN apk add --no-cache git build-base linux-headers cmake
 
 # Install Python
-RUN apk add --no-cache python3-dev py3-pip py3-wheel py3-virtualenv
+RUN apk add --no-cache \
+ python3-dev py3-pip py3-wheel \
+ py3-virtualenv
 
 # Add the library src to our build env
 FROM env AS devel
@@ -14,7 +16,7 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
-RUN cmake -version
+RUN cmake --version
 RUN cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
@@ -25,7 +27,9 @@ RUN cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install --break-system-packages --find-links=. \
+RUN python3 -m pip install \
+ --break-system-packages \
+ --find-links=. \
  cmakepybind11*.whl
 
 FROM install_env AS install_devel
