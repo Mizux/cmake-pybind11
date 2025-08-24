@@ -12,11 +12,15 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.guest = :freebsd
-  config.vm.box = "generic/freebsd14"
-  config.vm.box_version = "4.3.12"
+  config.vm.guest = :openbsd
+  # config.vm.box = "generic/openbsd7" # OpenBSD 7.4
+  # config.vm.box_version = "4.3.12"
+
+  config.vm.box = "twingly/openbsd-7.6"
+  config.vm.box_version = "1.0.0"
+
   config.vm.provider "virtualbox" do |v|
-    v.name = "ci_freebsd"
+    v.name = "ci_openbsd"
   end
   config.ssh.shell = "sh"
 
@@ -56,7 +60,7 @@ Vagrant.configure("2") do |config|
   # by making sure your Vagrantfile isn't accessible to the vagrant box.
   # If you use this you may want to enable additional shared subfolders as
   # shown above.
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -77,21 +81,28 @@ Vagrant.configure("2") do |config|
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
   # note: clang installed by default
+
+  # Vagrant provide a openBSD 7.4 box while only 7.6 and 7.7 are still
+  # maintained by openBSD -> older registry have been shutdown.
+  # config.vm.provision "env", type: "shell", inline:<<-SHELL
+  # set -x
+  # sysupgrade
+  # SHELL
+
   config.vm.provision "env", type: "shell", inline:<<-SHELL
   set -x
-  pkg update -f
-  pkg install -y git cmake swig
-  pkg install -y python39 py39-setuptools py39-wheel py39-pytest-virtualenv
+  pkg_add -u
+  pkg_add git cmake
   SHELL
 
   config.vm.provision "file", source: "../../../CMakeLists.txt", destination: "$HOME/project/"
   config.vm.provision "file", source: "../../../cmake", destination: "$HOME/project/"
-  config.vm.provision "file", source: "../../../python", destination: "$HOME/project/"
+  config.vm.provision "file", source: "../../../patches", destination: "$HOME/project/"
   config.vm.provision "file", source: "../../../Foo", destination: "$HOME/project/"
   config.vm.provision "file", source: "../../../Bar", destination: "$HOME/project/"
   config.vm.provision "file", source: "../../../FooBar", destination: "$HOME/project/"
+  config.vm.provision "file", source: "../../../FooBarApp", destination: "$HOME/project/"
   config.vm.provision "file", source: "../../../examples", destination: "$HOME/project/"
-  config.vm.provision "file", source: "../../../tests", destination: "$HOME/project/"
 
   config.vm.provision "devel", type: "shell", inline:<<-SHELL
   set -x
