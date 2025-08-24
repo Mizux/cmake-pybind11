@@ -1,6 +1,7 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/alpine
 FROM alpine:edge AS env
+
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
 RUN apk add --no-cache git build-base linux-headers cmake
@@ -22,13 +23,12 @@ RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test -v
+RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install \
- --break-system-packages \
+RUN python3 -m pip install --break-system-packages \
  --find-links=. \
  cmakepybind11*.whl
 
@@ -37,7 +37,7 @@ WORKDIR /home/samples
 COPY ci/samples .
 
 FROM install_devel AS install_build
-RUN python3 sample.py
+RUN python3 -m compileall .
 
 FROM install_build AS install_test
 RUN python3 sample.py

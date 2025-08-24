@@ -1,6 +1,7 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/r/opensuse/tumbleweed
 FROM opensuse/tumbleweed AS env
+
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
 RUN zypper update -y \
@@ -10,8 +11,13 @@ ENV CC=gcc CXX=g++
 
 # Install Python
 RUN zypper update -y \
-&& zypper install -y python3 python3-pip python3-devel python3-wheel python3-virtualenv \
+&& zypper install -y \
+ python311 python311-devel python311-pip \
+ python311-wheel python311-setuptools \
+ python3-numpy python3-pandas \
 && zypper clean -a
+RUN python3.11 -m pip install --break-system-packages \
+ mypy
 
 # Add the library src to our build env
 FROM env AS devel
@@ -19,19 +25,18 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
-RUN cmake -version
+RUN cmake --version
 RUN cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test -v
+RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install \
- --break-system-packages \
+RUN python3 -m pip install --break-system-packages \
  --find-links=. \
  cmakepybind11*.whl
 
@@ -40,7 +45,7 @@ WORKDIR /home/samples
 COPY ci/samples .
 
 FROM install_devel AS install_build
-RUN python3 sample.py
+RUN python3 -m compileall .
 
 FROM install_build AS install_test
 RUN python3 sample.py

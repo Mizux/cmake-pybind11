@@ -72,43 +72,6 @@ help:
 	@echo -e "\te.g. 'make amd64_ubuntu_test'"
 	@echo -e "\tDocker image unavailable: arm64_archlinux"
 	@echo
-	@echo -e "\tBuild using a toolchain."
-	@echo -e "\t${BOLD}toolchain_<toolchain>_<toolchain_stage>${RESET}: build <stage> docker image for a specific toolchain target."
-	@echo -e "\t${BOLD}save_toolchain_<toolchain>_<toolchain_stage>${RESET}: Save the <stage> docker image for a specific platform."
-	@echo -e "\t${BOLD}sh_toolchain_<toolchain>_<toolchain_stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
-	@echo -e "\t${BOLD}clean_toolchain_<toolchain>_<toolchain_stage>${RESET}: Remove cache and docker image."
-	@echo -e "\t${BOLD}clean_toolchains${RESET}: Remove ALL cache and docker image."
-	@echo
-	@echo -e "\tWith ${BOLD}<toolchain>${RESET}:"
-	@echo -e "\t\t${BOLD}armv7-eabihf${RESET} (alias: arm) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}armebv7-eabihf${RESET} (alias: armeb) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}aarch64${RESET} (alias: arm64) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}aarch64be${RESET} (alias: arm64be) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}mips32-r6${RESET} (alias: mips) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64-r6${RESET} (alias: mips64) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (alias: mipsel) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (alias: mips64el) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32-r2${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64-r2${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32el-r2${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64el-r2${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}ppc-440fp${RESET} (alias: ppc) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc-e500mc${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc64-power8${RESET} (alias: ppc64) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc64le-power8${RESET} (alias: ppc64le) (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}riscv32${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}riscv64${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}s390x${RESET} (bootlin toolchain)"
-	@echo
-	@echo -e "\tWith ${BOLD}<toolchain_stage>${RESET}:"
-	@echo -e "\t\t${BOLD}env${RESET}"
-	@echo -e "\t\t${BOLD}devel${RESET}"
-	@echo -e "\t\t${BOLD}toolchain${RESET}"
-	@echo -e "\t\t${BOLD}build${RESET}"
-	@echo -e "\t\t${BOLD}test${RESET}"
-	@echo -e "\te.g. 'make toolchain_mips64_build'"
-	@echo -e "\te.g. 'make toolchain_arm64_test'"
-	@echo
 	@echo -e "\tBuild using a vagrant machine."
 	@echo -e "\t${BOLD}<vm>_<vms_stage>${RESET}: build the vagrant <vm> virtual machine."
 	@echo -e "\t${BOLD}sh_<vm>_<lang>${RESET}: ssh to the vagrant machine specified (debug purpose)."
@@ -229,9 +192,9 @@ clean_all: $(addprefix clean_all_, $(STAGES))
 	rm -f $(addprefix cache/, $(DISTROS))
 
 #$(info Create targets: export $(addsuffix _export, $(DISTROS)).)
-targets_export = $(addsuffix _export, $(DISTROS))
-.PHONY: export $$(targets_export)
-export: $$(targets_export)
+targets_export := $(addsuffix _export, $(DISTROS))
+.PHONY: export_all $$(targets_export)
+export_all: $$(targets_export)
 $(targets_export): %_export: %_build | export/%
 	${DOCKER_RUN_CMD} \
     -v `pwd`/export/$*:/export \
@@ -297,9 +260,9 @@ clean_$1: $(addprefix clean_$1_all_, $(STAGES))
 	-rmdir cache/$1
 
 #$$(info Create targets: $1_export $(addprefix $1_, $(addsuffix _export, $(DISTROS))).)
-targets_$1_export = $(addprefix $1_, $(addsuffix _export, $(DISTROS)))
-.PHONY: $1_export $$(targets_$1_export)
-$1_export: $$(targets_$1_export)
+targets_$1_export := $(addprefix $1_, $(addsuffix _export, $(DISTROS)))
+.PHONY: $1_all_export $$(targets_$1_export)
+$1_all_export: $$(targets_$1_export)
 $$(targets_$1_export): $1_%_export: $1_%_build | export/$1/%
 	${DOCKER_RUN_CMD} \
     -v `pwd`/export/$1/$$*:/export \
@@ -312,72 +275,6 @@ $(foreach platform,$(PLATFORMS),$(eval $(call make-platform-target,$(platform)))
 ## MERGE ##
 .PHONY: clean_platforms
 clean_platforms: $(addprefix clean_, $(PLATFORMS))
-
-###############
-## TOOLCHAIN ##
-###############
-TOOLCHAIN_TARGETS := \
- arm armv7-eabihf \
- armeb armebv7-eabihf \
- arm64 aarch64 \
- arm64be aarch64be \
- mips mips32-r6 mips32-r2 \
- mipsel mips32el-r6 mips32el-r2 \
- mips64 mips64-r6 mips64-r2 \
- mips64el mips64el-r6 mips64el-r2 \
- ppc ppc-440fp ppc-e500mc \
- ppc64 ppc64-power8 \
- ppc64le ppc64le-power8 \
- riscv32 riscv64 \
- s390x
-TOOLCHAIN_STAGES := env devel toolchain build test
-
-define toolchain-stage-target =
-#$$(info STAGE: $1)
-#$$(info Create targets: toolchain_$1 $(addprefix toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS))).)
-targets_toolchain_$1 := $(addprefix toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS)))
-.PHONY: toolchain_$1 $$(targets_toolchain_$1)
-toolchain_$1: $$(targets_toolchain_$1)
-$$(targets_toolchain_$1): toolchain_%_$1: docker/toolchain/Dockerfile
-	#@docker image rm -f ${IMAGE}:toolchain_$$*_$1 2>/dev/null
-	${DOCKER_BUILD_CMD} \
- --tag ${IMAGE}:toolchain_$$*_$1 \
- --build-arg TARGET=$$* \
- --target=$1 \
- -f $$< \
- ..
-
-#$$(info Create targets: save_toolchain_$1 $(addprefix save_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS))) (debug).)
-save_targets_toolchain_$1 := $(addprefix save_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS)))
-.PHONY: save_toolchain_$1 $$(save_targets_toolchain_$1)
-save_toolchain_$1: $$(save_targets_toolchain_$1)
-$$(save_targets_toolchain_$1): save_toolchain_%_$1: cache/%/docker_$1.tar
-cache/%/docker_$1.tar: %_$1
-	@rm -f $$@
-	mkdir -p cache/$$*
-	docker save ${IMAGE}:toolchain_$$*_$1 -o $$@
-
-#$$(info Create targets: $(addprefix sh_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS))) (debug).)
-sh_targets_toolchain_$1 = $(addprefix sh_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS)))
-.PHONY: $$(sh_targets_toolchain_$1)
-$$(sh_targets_toolchain_$1): sh_toolchain_%_$1: %_$1
-	${DOCKER_RUN_CMD} -it --name ${PROJECT}_toolchain_$$*_$1 ${IMAGE}:toolchain_$$*_$1
-
-#$$(info Create targets: clean_toolchain_$1 $(addprefix clean_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS))).)
-clean_targets_toolchain_$1 = $(addprefix clean_toolchain_, $(addsuffix _$1, $(TOOLCHAIN_TARGETS)))
-.PHONY: clean_toolchain_$1 $$(clean_targets_toolchain_$1)
-clean_toolchain_$1: $$(clean_targets_toolchain_$1)
-$$(clean_targets_toolchain_$1): clean_toolchain_%_$1:
-	docker image rm -f ${IMAGE}:toolchain_$$*_$1 2>/dev/null
-	rm -f cache/$$*/docker_$1.tar
-endef
-
-$(foreach stage,$(TOOLCHAIN_STAGES),$(eval $(call toolchain-stage-target,$(stage))))
-
-## MERGE ##
-.PHONY: clean_toolchains
-clean_toolchains: $(addprefix clean_toolchain_, $(TOOLCHAIN_STAGES))
-	-rmdir $(addprefix cache/, $(TOOLCHAIN_TARGETS))
 
 #############
 ## VAGRANT ##
@@ -411,7 +308,7 @@ $(clean_vms_targets): clean_%: vagrant/%/Vagrantfile
 ## CLEAN ##
 ###########
 .PHONY: clean
-clean: clean_all clean_platforms clean_toolchains clean_vms
+clean: clean_all clean_platforms clean_vms
 	docker container prune -f
 	docker image prune -f
 	-rmdir cache
