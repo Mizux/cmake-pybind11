@@ -8,7 +8,8 @@ RUN pacman -Syu --noconfirm git base-devel cmake
 
 # Install Python
 RUN pacman -Syu --noconfirm \
- python python-pip python-wheel python-setuptools python-virtualenv
+ python python-pip python-wheel python-setuptools \
+ python-virtualenv
 
 # Add the library src to our build env
 FROM env AS devel
@@ -27,7 +28,8 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install --break-system-packages \
+RUN python3 -m pip install \
+ --break-system-packages \
  --find-links=. \
  cmakepybind11*.whl
 

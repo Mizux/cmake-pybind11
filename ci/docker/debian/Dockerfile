@@ -13,7 +13,8 @@ RUN apt update -qq \
 # Install Python
 RUN apt update -qq \
 && apt install -yq \
- python3-dev python3-pip python3-venv \
+ python3-dev python3-pip \
+ python3-venv python3-virtualenv \
  python3-setuptools python3-wheel \
  python3-numpy python3-pandas \
 && apt clean \
@@ -38,7 +39,8 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install --break-system-packages \
+RUN python3 -m pip install \
+ --break-system-packages \
  --find-links=. \
  cmakepybind11*.whl
 
