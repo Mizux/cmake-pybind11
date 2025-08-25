@@ -1,5 +1,5 @@
 # ref: https://github.com/docker-library/official-images
-name: amd64 Docker
+name: arm64 Docker
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -14,7 +14,6 @@ jobs:
         distro: [
           almalinux,
           alpine,
-          archlinux,
           debian,
           fedora,
           opensuse,
@@ -22,33 +21,35 @@ jobs:
           ubuntu
         ]
       fail-fast: false
-    name: amd64•${{ matrix.distro }}
+    name: arm64•${{matrix.distro}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Check docker
         run: |
           docker info
           docker buildx ls
       - name: Build env image
-        run: make --directory=ci amd64_${{ matrix.distro }}_env
+        run: make --directory=ci arm64_${{matrix.distro}}_env
       - name: Build devel project
-        run: make --directory=ci amd64_${{ matrix.distro }}_devel
+        run: make --directory=ci arm64_${{matrix.distro}}_devel
       - name: Build project
-        run: make --directory=ci amd64_${{ matrix.distro }}_build
+        run: make --directory=ci arm64_${{matrix.distro}}_build
       - name: Test project
-        run: make --directory=ci amd64_${{ matrix.distro }}_test
+        run: make --directory=ci arm64_${{matrix.distro}}_test
 
       - name: Build install env image
-        run: make --directory=ci amd64_${{ matrix.distro }}_install_env
+        run: make --directory=ci arm64_${{matrix.distro}}_install_env
       - name: Build install devel project
-        run: make --directory=ci amd64_${{ matrix.distro }}_install_devel
+        run: make --directory=ci arm64_${{matrix.distro}}_install_devel
       - name: Build install project
-        run: make --directory=ci amd64_${{ matrix.distro }}_install_build
+        run: make --directory=ci arm64_${{matrix.distro}}_install_build
       - name: Test install project
-        run: make --directory=ci amd64_${{ matrix.distro }}_install_test
+        run: make --directory=ci arm64_${{matrix.distro}}_install_test
 
-  amd64_docker:
+  arm64_docker:
     runs-on: ubuntu-latest
     needs: docker
     steps:
