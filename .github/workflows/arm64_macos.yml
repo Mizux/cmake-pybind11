@@ -16,11 +16,26 @@ jobs:
           {name: "Xcode", generator: "Xcode", config: Release, build_target: ALL_BUILD, test_target: RUN_TESTS, install_target: install},
           {name: "Make", generator: "Unix Makefiles", config: Release, build_target: all, test_target: test, install_target: install},
         ]
+        python: [
+          {version: "3.9"},
+          #{version: "3.10"},
+          #{version: "3.11"},
+          {version: "3.12"},
+          #{version: "3.13"},
+        ]
       fail-fast: false
-    name: MacOS•CMake(${{matrix.cmake.name}})
-    runs-on: macos-latest # M1 based runner
+    name: MacOS•${{matrix.cmake.name}}•Py${{matrix.python.version}}
+    runs-on: macos-latest # macos M1 based runner
     steps:
       - uses: actions/checkout@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python.version }}
+      - name: Update Path
+        run: |
+          echo "$HOME/Library/Python/${{ matrix.python.version }}/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Check CMake
         run: cmake --version
       - name: Configure
