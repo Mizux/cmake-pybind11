@@ -74,6 +74,9 @@ add_subdirectory(cmake/dependencies dependencies)
 option(FETCH_PYTHON_DEPS "Install python required modules if not available" ON)
 message(STATUS "Python fetch dependencies: ${FETCH_PYTHON_DEPS}")
 
+option(VENV_USE_SYSTEM_SITE_PACKAGES "Python venv can use system site packages" OFF)
+message(STATUS "Python: Allow venv to use system site packages: ${VENV_USE_SYSTEM_SITE_PACKAGES}")
+
 include(deps)
 include(python)
 
