@@ -93,8 +93,8 @@ Vagrant.configure("2") do |config|
   set -x
   pkg_add -u
   pkg_add git cmake
-  pkg_add python-3.11 py3-pip py3-wheel py3-setuptools py3-virtualenv
-  pkg_add py3-numpy py3-pandas py3-matplotlib
+  pkg_add python-3.11.10p1 py3-pip py3-wheel py3-setuptools py3-virtualenv
+  pkg_add py3-numpy py3-pandas
   SHELL
 
   config.vm.provision "file", source: "../../../CMakeLists.txt", destination: "$HOME/project/"
