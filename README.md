@@ -1,35 +1,39 @@
 Github-CI:<br>
-[![Build Status][github_amd64_linux_status]][github_amd64_linux_link]
-[![Build Status][github_amd64_macos_status]][github_amd64_macos_link]
-[![Build Status][github_arm64_macos_status]][github_arm64_macos_link]
-[![Build Status][github_amd64_windows_status]][github_amd64_windows_link]<br>
-[![Build Status][github_amd64_docker_status]][github_amd64_docker_link]
-[![Build Status][github_arm64_docker_status]][github_arm64_docker_link]
-[![Build Status][github_riscv64_docker_status]][github_riscv64_docker_link]
+[![Build Status][amd64_linux_status]][amd64_linux_link]
+[![Build Status][amd64_macos_status]][amd64_macos_link]
+[![Build Status][arm64_macos_status]][arm64_macos_link]
+[![Build Status][amd64_windows_status]][amd64_windows_link]<br>
 
-[github_amd64_linux_status]: ./../../actions/workflows/amd64_linux.yml/badge.svg
-[github_amd64_linux_link]: ./../../actions/workflows/amd64_linux.yml
-[github_amd64_macos_status]: ./../../actions/workflows/amd64_macos.yml/badge.svg
-[github_amd64_macos_link]: ./../../actions/workflows/amd64_macos.yml
-[github_arm64_macos_status]: ./../../actions/workflows/arm64_macos.yml/badge.svg
-[github_arm64_macos_link]: ./../../actions/workflows/arm64_macos.yml
-[github_amd64_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg
-[github_amd64_windows_link]: ./../../actions/workflows/amd64_windows.yml
-[github_amd64_docker_status]: ./../../actions/workflows/amd64_docker.yml/badge.svg
-[github_amd64_docker_link]: ./../../actions/workflows/amd64_docker.yml
-[github_arm64_docker_status]: ./../../actions/workflows/arm64_docker.yml/badge.svg
-[github_arm64_docker_link]: ./../../actions/workflows/arm64_docker.yml
-[github_riscv64_docker_status]: ./../../actions/workflows/riscv64_docker.yml/badge.svg
-[github_riscv64_docker_link]: ./../../actions/workflows/riscv64_docker.yml
+[![Build Status][amd64_docker_status]][amd64_docker_link]
+[![Build Status][arm64_docker_status]][arm64_docker_link]
+[![Build Status][riscv64_docker_status]][riscv64_docker_link]<br>
+
+[amd64_linux_status]: ./../../actions/workflows/amd64_linux_cmake.yml/badge.svg
+[amd64_linux_link]: ./../../actions/workflows/amd64_linux_cmake.yml
+[amd64_macos_status]: ./../../actions/workflows/amd64_macos_cmake.yml/badge.svg
+[amd64_macos_link]: ./../../actions/workflows/amd64_macos_cmake.yml
+[arm64_macos_status]: ./../../actions/workflows/arm64_macos_cmake.yml/badge.svg
+[arm64_macos_link]: ./../../actions/workflows/arm64_macos_cmake.yml
+[amd64_windows_status]: ./../../actions/workflows/amd64_windows_cmake.yml/badge.svg
+[amd64_windows_link]: ./../../actions/workflows/amd64_windows_cmake.yml
+
+[amd64_docker_status]: ./../../actions/workflows/amd64_docker_cmake.yml/badge.svg
+[amd64_docker_link]: ./../../actions/workflows/amd64_docker_cmake.yml
+[arm64_docker_status]: ./../../actions/workflows/arm64_docker_cmake.yml/badge.svg
+[arm64_docker_link]: ./../../actions/workflows/arm64_docker_cmake.yml
+[riscv64_docker_status]: ./../../actions/workflows/riscv64_docker_cmake.yml/badge.svg
+[riscv64_docker_link]: ./../../actions/workflows/riscv64_docker_cmake.yml
 
 # Introduction
+
 <nav for="project"> |
 <a href="#requirement">Requirement</a> |
 <a href="#codemap">Codemap</a> |
 <a href="#dependencies">Dependencies</a> |
-<a href="#build-process">Build</a> |
+<a href="#build">Build</a> |
 <a href="ci/README.md">CI</a> |
 <a href="#appendices">Appendices</a> |
+<a href="#contributing">Contributing</a> |
 <a href="#license">License</a> |
 </nav>
 
@@ -48,10 +52,10 @@ This project should run on GNU/Linux, MacOS and Windows.
 
 You'll need:
 
-* "CMake >= 3.18".
-* "Python >= 3.6" and python module 'pip' (ed "setuptools" and "wheel" will be
+* "CMake >= 3.34".
+* "Python >= 3.9" and python module 'pip' (ed "setuptools" and "wheel" will be
  auto installed on demand).
-* "Pybind11 >= 2.10".
+* "Pybind11 >= 2.13".
 
 ## Codemap
 
@@ -157,8 +161,9 @@ to study their layout.
 Few links on the subject...
 
 ### Resources
+
 Project layout:
-* The Pitchfork Layout Revision 1 (cxx-pflR1)
+* [The Pitchfork Layout Revision 1 (cxx-pflR1)](https://github.com/vector-of-bool/pitchfork)
 
 CMake:
 * https://llvm.org/docs/CMakePrimer.html
@@ -176,6 +181,13 @@ plantuml -Tsvg docs/{file}.dot
 ```
 So you can find the dot source files in [docs](docs).
 
+# Contributing
+
+The [CONTRIBUTING.md](./CONTRIBUTING.md) file contains instructions on how to
+file the Contributor License Agreement before sending any pull requests (PRs).
+Of course, if you're new to the project, it's usually best to discuss any
+proposals and reach consensus before sending your first PR.
+
 ## License
 
 Apache 2. See the LICENSE file for details.
@@ -184,3 +196,4 @@ Apache 2. See the LICENSE file for details.
 
 This is not an official Google product, it is just code that happens to be
 owned by Google.
+
