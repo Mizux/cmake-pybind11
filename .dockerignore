@@ -1,30 +1,29 @@
+# Project Files unneeded by docker
 .dockerignore
 
-# Project Files unneeded by docker
 .git
 .gitignore
 .github
 .clang-format
-
-ci/Makefile
-#ci/docker
-**/Dockerfile
-**/Vagrantfile
-ci/docs
-ci/cache
-ci/export
 
 AUTHORS
 CONTRIBUTING.md
 CONTRIBUTORS
 LICENSE
 README.md
-docs/
-tools/Makefile
-tools/export
-tools/**/*.Dockerfile
+docs
 
-# Native cmake build
+# CMake
+cmake/docs
+cmake/README.md
+
+# CI
+ci/Makefile
+ci/docker
+ci/docs
+ci/cache
+
+# Native build
 build/
 build*/
 
