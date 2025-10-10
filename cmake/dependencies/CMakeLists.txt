@@ -22,10 +22,11 @@ if(BUILD_pybind11)
   FetchContent_Declare(
     pybind11
     GIT_REPOSITORY "https://github.com/pybind/pybind11.git"
-    GIT_TAG "v2.13.6"
+    GIT_TAG "v3.0.0"
     GIT_SHALLOW TRUE
+    #UPDATE_COMMAND git reset --hard
     #PATCH_COMMAND git apply --ignore-whitespace
-    # "${CMAKE_CURRENT_LIST_DIR}/../../patches/pybind11-v2.13.6.patch"
+    # "${CMAKE_CURRENT_LIST_DIR}/../../patches/pybind11-v3.0.0.patch"
   )
   FetchContent_MakeAvailable(pybind11)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
