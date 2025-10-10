@@ -1,5 +1,5 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.16..3.31)
+cmake_minimum_required(VERSION 3.24..3.31)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Enable output of compile commands during generation.
@@ -84,13 +84,15 @@ message(STATUS "Build pybind11: ${BUILD_pybind11}")
 
 # Build Needed dependencies
 add_subdirectory(cmake/dependencies dependencies)
-#list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
 
 option(FETCH_PYTHON_DEPS "Install python required modules if not available" ON)
 message(STATUS "Python fetch dependencies: ${FETCH_PYTHON_DEPS}")
 
 option(VENV_USE_SYSTEM_SITE_PACKAGES "Python venv can use system site packages" OFF)
 message(STATUS "Python: Allow venv to use system site packages: ${VENV_USE_SYSTEM_SITE_PACKAGES}")
+
+option(BUILD_EXAMPLES "Build examples" ON)
+message(STATUS "Build examples: ${BUILD_EXAMPLES}")
 
 include(deps)
 
@@ -100,7 +102,4 @@ include(python)
 
 add_subdirectory(tests)
 
-option(BUILD_EXAMPLES "Build examples" ON)
-message(STATUS "Build examples: ${BUILD_EXAMPLES}")
 add_subdirectory(examples)
-

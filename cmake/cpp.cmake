@@ -1,8 +1,3 @@
-enable_language(CXX)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Check primitive types
 option(CHECK_TYPE "Check primitive type size" OFF)
 if(CHECK_TYPE)
@@ -31,24 +26,6 @@ if(CHECK_TYPE)
   check_type_size("uintptr_t" SIZEOF_UINTPTR_T LANGUAGE CXX)
   message(STATUS "Found uintptr_t size: ${SIZEOF_UINTPTR_T}")
   cmake_pop_check_state()
-endif()
-
-if(BUILD_TESTING)
-  include(FetchContent)
-  #FetchContent_Declare(
-  #  googletest
-  #  GIT_REPOSITORY https://github.com/google/googletest.git
-  #  GIT_TAG master)
-  #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  #FetchContent_MakeAvailable(googletest)
-  FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG devel
-    GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-  )
-  FetchContent_MakeAvailable(Catch2)
 endif()
 
 include(GNUInstallDirs)
@@ -92,7 +69,9 @@ add_subdirectory(Foo)
 add_subdirectory(Bar)
 add_subdirectory(FooBar)
 
-# Install
+###################
+## CMake Install ##
+###################
 install(EXPORT ${PROJECT_NAME}Targets
   NAMESPACE ${PROJECT_NAMESPACE}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
