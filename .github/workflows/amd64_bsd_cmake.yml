@@ -1,5 +1,5 @@
 # ref: https://github.com/actions/runner-images
-name: amd64 BSD
+name: amd64 BSD CMake
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -19,7 +19,7 @@ jobs:
         ]
         allow_failure: [true]
       fail-fast: false
-    name: amd64•${{matrix.distro}}
+    name: amd64•${{matrix.distro}}•CMake
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: make --directory=ci ${{matrix.distro}}_build
 
-  amd64_bsd:
+  amd64_bsd_cmake:
     runs-on: ubuntu-latest
     needs: vagrant
     steps:
