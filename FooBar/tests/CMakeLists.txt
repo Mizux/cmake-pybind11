@@ -2,7 +2,11 @@ if(NOT BUILD_TESTING)
   return()
 endif()
 
-file(GLOB CPP_SRCS "*.cpp")
-foreach(TEST IN LISTS CPP_SRCS)
-  add_cpp_test(${TEST})
-endforeach()
+add_cxx_test(
+  NAME
+    foobar_test
+  SOURCES
+    foobar_test.cpp
+  LINK_LIBRARIES
+    ${PROJECT_NAMESPACE}::FooBar
+)

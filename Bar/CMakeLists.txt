@@ -1,5 +1,4 @@
-add_library(Bar "")
-
+add_library(Bar)
 target_sources(Bar
   PRIVATE
     include/bar/Bar.hpp
@@ -8,11 +7,17 @@ target_include_directories(Bar
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-target_compile_features(Bar PUBLIC cxx_std_17)
+target_compile_features(Bar PUBLIC cxx_std_20)
 set_target_properties(Bar PROPERTIES
   VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/bar/Bar.hpp)
-#target_link_libraries(Bar PUBLIC ...)
+if(APPLE)
+  set_target_properties(Bar PROPERTIES INSTALL_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(Bar PROPERTIES INSTALL_RPATH "$ORIGIN")
+endif()
+target_link_libraries(Bar PRIVATE absl::log)
 add_library(${PROJECT_NAMESPACE}::Bar ALIAS Bar)
 
 add_subdirectory(tests)

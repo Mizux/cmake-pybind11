@@ -5,7 +5,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # Enable output of compile commands during generation.
 option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile command" ON)
 
-project(CMakePybind11 VERSION 1.0 LANGUAGES C CXX)
+project(CMakePybind11 VERSION 1.0.0 LANGUAGES C CXX)
 set(PROJECT_NAMESPACE cmpb11)
 message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 #message(STATUS "major: ${PROJECT_VERSION_MAJOR}")
@@ -78,11 +78,15 @@ include(ccache)
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
+if(BUILD_TESTING)
+  option(BUILD_googletest "Build googletest" ON)
+else()
+  set(BUILD_googletest OFF)
+endif()
+message(STATUS "Build googletest: ${BUILD_googletest}")
+
 option(BUILD_pybind11 "Build pybind11 library" ON)
 message(STATUS "Build pybind11: ${BUILD_pybind11}")
-
-# Build Needed dependencies
-add_subdirectory(cmake/dependencies dependencies)
 
 option(FETCH_PYTHON_DEPS "Install python required modules if not available" ON)
 message(STATUS "Python fetch dependencies: ${FETCH_PYTHON_DEPS}")
@@ -93,7 +97,14 @@ message(STATUS "Python: Allow venv to use system site packages: ${VENV_USE_SYSTE
 option(BUILD_EXAMPLES "Build examples" ON)
 message(STATUS "Build examples: ${BUILD_EXAMPLES}")
 
-include(deps)
+# Find system deps
+include(system_deps)
+
+# Build Needed dependencies
+add_subdirectory(cmake/dependencies dependencies)
+
+# verify deps
+include(check_deps)
 
 include(cpp)
 foreach(SUBPROJECT IN ITEMS Foo Bar FooBar)
@@ -106,5 +117,4 @@ foreach(SUBPROJECT IN ITEMS Foo Bar FooBar)
 endforeach()
 
 add_subdirectory(tests)
-
 add_subdirectory(examples)
