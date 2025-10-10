@@ -107,30 +107,49 @@ if(BUILD_TESTING)
   endif()
 endif()
 
-if(BUILD_TESTING)
-  # add_python_test()
-  # CMake function to generate and build python test.
-  # Parameters:
-  #  the python filename
-  # e.g.:
-  # add_python_test(foo.py)
-  function(add_python_test FILE_NAME)
-    message(STATUS "Configuring test ${FILE_NAME} ...")
-    get_filename_component(TEST_NAME ${FILE_NAME} NAME_WE)
+# add_python_test()
+# CMake function to generate and build python test.
+# Parameters:
+#  FILE_NAME: the python filename
+#  COMPONENT_NAME: name of the ortools/ subdir where the test is located
+#  note: automatically determined if located in ortools/<component>/python/
+# e.g.:
+# add_python_test(
+#   FILE_NAME
+#     ${PROJECT_SOURCE_DIR}/ortools/foo/python/bar_test.py
+#   COMPONENT_NAME
+#     foo
+# )
+function(add_python_test)
+  set(options "")
+  set(oneValueArgs FILE_NAME)
+  set(multiValueArgs "")
+  cmake_parse_arguments(TEST
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
+  if(NOT TEST_FILE_NAME)
+    message(FATAL_ERROR "no FILE_NAME provided")
+  endif()
+  get_filename_component(TEST_NAME ${TEST_FILE_NAME} NAME_WE)
+
+  message(STATUS "Configuring test ${TEST_FILE_NAME} ...")
+
+  if(BUILD_TESTING)
     add_test(
       NAME python_test_${TEST_NAME}
-      COMMAND ${VENV_Python3_EXECUTABLE} -m pytest ${FILE_NAME}
+      COMMAND ${VENV_Python3_EXECUTABLE} -m pytest ${TEST_FILE_NAME}
       WORKING_DIRECTORY ${VENV_DIR})
-    message(STATUS "Configuring test ${FILE_NAME} done")
-  endfunction()
-endif()
+  endif()
+  message(STATUS "Configuring test ${TEST_FILE_NAME} ...DONE")
+endfunction()
 
 #######################
 ##  PYTHON WRAPPERS  ##
 #######################
-list(APPEND CMAKE_SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}")
-
-set(PYTHON_PROJECT cmakepybind11)
+set(PYTHON_PROJECT ${PROJECT_NAMESPACE})
 message(STATUS "Python project: ${PYTHON_PROJECT}")
 set(PYTHON_PROJECT_DIR ${PROJECT_BINARY_DIR}/python/${PYTHON_PROJECT})
 message(STATUS "Python project build path: ${PYTHON_PROJECT_DIR}")
@@ -139,11 +158,28 @@ message(STATUS "Python project build path: ${PYTHON_PROJECT_DIR}")
 ## Python Packaging  ##
 #######################
 #file(MAKE_DIRECTORY python/${PYTHON_PROJECT})
-file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/__init__.py CONTENT "__version__ = \"${PROJECT_VERSION}\"\n")
+configure_file(
+  ${PROJECT_SOURCE_DIR}/python/__init__.py.in
+  ${PROJECT_BINARY_DIR}/python/__init__.py.in
+  @ONLY)
+file(GENERATE
+  OUTPUT ${PYTHON_PROJECT_DIR}/__init__.py
+  INPUT ${PROJECT_BINARY_DIR}/python/__init__.py.in)
 
 file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foo/__init__.py CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foo/python/__init__.py CONTENT "")
 file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/bar/__init__.py CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/bar/python/__init__.py CONTENT "")
 file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foobar/__init__.py CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foobar/python/__init__.py CONTENT "")
+
+# Adds py.typed to make typed packages.
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foo/py.typed CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foo/python/py.typed CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/bar/py.typed CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/bar/python/py.typed CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foobar/py.typed CONTENT "")
+file(GENERATE OUTPUT ${PYTHON_PROJECT_DIR}/foobar/python/py.typed CONTENT "")
 
 # setup.py.in contains cmake variable e.g. @PYTHON_PROJECT@ and
 # generator expression e.g. $<TARGET_FILE_NAME:pyFoo>
@@ -161,7 +197,76 @@ file(GENERATE
 #  COMMAND ${CMAKE_COMMAND} -E copy setup.py setup.py
 #  WORKING_DIRECTORY python)
 
-# Look for python modules
+set(is_windows "$<PLATFORM_ID:Windows>")
+set(is_not_windows "$<NOT:$<PLATFORM_ID:Windows>>")
+
+set(is_foo_shared "$<STREQUAL:$<TARGET_PROPERTY:Foo,TYPE>,SHARED_LIBRARY>")
+set(need_unix_foo_lib "$<AND:${is_not_windows},${is_foo_shared}>")
+set(need_windows_foo_lib "$<AND:${is_windows},${is_foo_shared}>")
+
+set(is_bar_shared "$<STREQUAL:$<TARGET_PROPERTY:Bar,TYPE>,SHARED_LIBRARY>")
+set(need_unix_bar_lib "$<AND:${is_not_windows},${is_bar_shared}>")
+set(need_windows_bar_lib "$<AND:${is_windows},${is_bar_shared}>")
+
+set(is_foobar_shared "$<STREQUAL:$<TARGET_PROPERTY:FooBar,TYPE>,SHARED_LIBRARY>")
+set(need_unix_foobar_lib "$<AND:${is_not_windows},${is_foobar_shared}>")
+set(need_windows_foobar_lib "$<AND:${is_windows},${is_foobar_shared}>")
+
+add_custom_command(
+  OUTPUT python/libs_timestamp
+  COMMAND ${CMAKE_COMMAND} -E remove -f libs_timestamp
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${PYTHON_PROJECT}/.libs
+
+  COMMAND ${CMAKE_COMMAND} -E
+    $<IF:${is_foo_shared},copy,true>
+    $<${need_unix_foo_lib}:$<TARGET_SONAME_FILE:Foo>>
+    $<${need_windows_foo_lib}:$<TARGET_FILE:Foo>>
+    ${PYTHON_PROJECT}/.libs
+
+  COMMAND ${CMAKE_COMMAND} -E
+    $<IF:${is_bar_shared},copy,true>
+    $<${need_unix_bar_lib}:$<TARGET_SONAME_FILE:Bar>>
+    $<${need_windows_bar_lib}:$<TARGET_FILE:Bar>>
+    ${PYTHON_PROJECT}/.libs
+
+  COMMAND ${CMAKE_COMMAND} -E
+    $<IF:${is_foobar_shared},copy,true>
+    $<${need_unix_foobar_lib}:$<TARGET_SONAME_FILE:FooBar>>
+    $<${need_windows_foobar_lib}:$<TARGET_FILE:FooBar>>
+    ${PYTHON_PROJECT}/.libs
+
+  COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_BINARY_DIR}/python/libs_timestamp
+  MAIN_DEPENDENCY
+    python/setup.py.in
+  DEPENDS
+    python/setup.py
+    ${PROJECT_NAMESPACE}::Foo
+    ${PROJECT_NAMESPACE}::Bar
+    ${PROJECT_NAMESPACE}::FooBar
+  WORKING_DIRECTORY python
+  COMMAND_EXPAND_LISTS)
+
+add_custom_command(
+  OUTPUT python/pybind11_timestamp
+  COMMAND ${CMAKE_COMMAND} -E remove -f pybind11_timestamp
+  COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:pyFoo> ${PYTHON_PROJECT}/foo/python
+  COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:pyBar> ${PYTHON_PROJECT}/bar/python
+  COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:pyFooBar> ${PYTHON_PROJECT}/foobar/python
+  COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_BINARY_DIR}/python/pybind11_timestamp
+  MAIN_DEPENDENCY
+    python/setup.py.in
+  DEPENDS
+    ${PROJECT_NAMESPACE}::pyFoo
+    ${PROJECT_NAMESPACE}::pyBar
+    ${PROJECT_NAMESPACE}::pyFooBar
+  WORKING_DIRECTORY python
+  COMMAND_EXPAND_LISTS)
+
+
+# Look for required python modules
 search_python_module(
   NAME setuptools
   PACKAGE setuptools)
@@ -172,20 +277,6 @@ search_python_module(
 add_custom_command(
   OUTPUT python/dist_timestamp
   COMMAND ${CMAKE_COMMAND} -E remove_directory dist
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${PYTHON_PROJECT}/.libs
-  # Don't need to copy static lib on Windows.
-  COMMAND ${CMAKE_COMMAND} -E $<IF:$<STREQUAL:$<TARGET_PROPERTY:Foo,TYPE>,SHARED_LIBRARY>,copy,true>
-  $<$<STREQUAL:$<TARGET_PROPERTY:Foo,TYPE>,SHARED_LIBRARY>:$<TARGET_SONAME_FILE:Foo>>
-  ${PYTHON_PROJECT}/.libs
-  COMMAND ${CMAKE_COMMAND} -E $<IF:$<STREQUAL:$<TARGET_PROPERTY:Bar,TYPE>,SHARED_LIBRARY>,copy,true>
-  $<$<STREQUAL:$<TARGET_PROPERTY:Bar,TYPE>,SHARED_LIBRARY>:$<TARGET_SONAME_FILE:Bar>>
-  ${PYTHON_PROJECT}/.libs
-  COMMAND ${CMAKE_COMMAND} -E $<IF:$<STREQUAL:$<TARGET_PROPERTY:FooBar,TYPE>,SHARED_LIBRARY>,copy,true>
-  $<$<STREQUAL:$<TARGET_PROPERTY:FooBar,TYPE>,SHARED_LIBRARY>:$<TARGET_SONAME_FILE:FooBar>>
-  ${PYTHON_PROJECT}/.libs
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyFoo> ${PYTHON_PROJECT}/foo
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyBar> ${PYTHON_PROJECT}/bar
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyFooBar> ${PYTHON_PROJECT}/foobar
   #COMMAND ${Python3_EXECUTABLE} setup.py bdist_egg bdist_wheel
   COMMAND ${Python3_EXECUTABLE} setup.py bdist_wheel
   COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_BINARY_DIR}/python/dist_timestamp
@@ -193,10 +284,9 @@ add_custom_command(
     python/setup.py.in
   DEPENDS
     python/setup.py
-    ${PROJECT_NAMESPACE}::Foo
-    ${PROJECT_NAMESPACE}::pyFoo
-    ${PROJECT_NAMESPACE}::pyBar
-    ${PROJECT_NAMESPACE}::pyFooBar
+    python/libs_timestamp
+    python/pybind11_timestamp
+    $<$<BOOL:${GENERATE_PYTHON_STUB}>:python/stub_timestamp>
   BYPRODUCTS
     python/${PYTHON_PROJECT}
     python/${PYTHON_PROJECT}.egg-info
@@ -226,7 +316,8 @@ if(BUILD_TESTING)
     COMMAND ${VENV_Python3_EXECUTABLE} -m pip install
       --find-links=${CMAKE_CURRENT_BINARY_DIR}/python/dist ${PYTHON_PROJECT}==${PROJECT_VERSION}
     # install modules only required to run examples
-    COMMAND ${VENV_Python3_EXECUTABLE} -m pip install pytest
+    COMMAND ${VENV_Python3_EXECUTABLE} -m pip install
+      pytest
     BYPRODUCTS ${VENV_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Create venv and install ${PYTHON_PROJECT}"
