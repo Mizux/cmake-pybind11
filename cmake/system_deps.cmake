@@ -12,3 +12,9 @@ if(NOT BUILD_pybind11)
   find_package(pybind11 REQUIRED)
 endif()
 
+# CXX Test
+if(BUILD_TESTING)
+  if(NOT BUILD_googletest AND NOT TARGET GTest::gtest_main)
+    find_package(GTest REQUIRED)
+  endif()
+endif()
