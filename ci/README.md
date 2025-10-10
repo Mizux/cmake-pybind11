@@ -85,7 +85,7 @@ RUN wget "https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.sh" \
 && rm cmake-3.26.4-linux-x86_64.sh
 ```
 
-**warning**: Since [CMake 3.20](https://cmake.org/files/v3.20/) Kitware use a lowercase `linux` instead of `Linux`.
+**warning**: Since [CMake 3.20](https://cmake.org/files/v3.20/) Kitware use a lowercase `linux` instead of `Linux` (e.g. [CMake 3.19](https://cmake.org/files/v3.19/)).
 
 ### Build from source
 
