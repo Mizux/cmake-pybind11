@@ -96,8 +96,14 @@ message(STATUS "Build examples: ${BUILD_EXAMPLES}")
 include(deps)
 
 include(cpp)
+foreach(SUBPROJECT IN ITEMS Foo Bar FooBar)
+  add_subdirectory(${SUBPROJECT})
+endforeach()
 
 include(python)
+foreach(SUBPROJECT IN ITEMS Foo Bar FooBar)
+  add_subdirectory(${SUBPROJECT}/python)
+endforeach()
 
 add_subdirectory(tests)
 

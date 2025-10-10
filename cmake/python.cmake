@@ -135,11 +135,6 @@ message(STATUS "Python project: ${PYTHON_PROJECT}")
 set(PYTHON_PROJECT_DIR ${PROJECT_BINARY_DIR}/python/${PYTHON_PROJECT})
 message(STATUS "Python project build path: ${PYTHON_PROJECT_DIR}")
 
-# Swig wrap all libraries
-foreach(SUBPROJECT IN ITEMS Foo Bar FooBar)
-  add_subdirectory(${SUBPROJECT}/python)
-endforeach()
-
 #######################
 ## Python Packaging  ##
 #######################

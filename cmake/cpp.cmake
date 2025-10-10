@@ -65,10 +65,6 @@ function(add_cpp_test FILE_NAME)
   message(STATUS "Configuring test ${FILE_NAME}: ...DONE")
 endfunction()
 
-add_subdirectory(Foo)
-add_subdirectory(Bar)
-add_subdirectory(FooBar)
-
 ###################
 ## CMake Install ##
 ###################
