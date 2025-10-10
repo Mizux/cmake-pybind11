@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -eux
 
 # Check plantuml is in PATH
 command -v plantuml
