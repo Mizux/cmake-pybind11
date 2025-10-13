@@ -2,10 +2,10 @@ build/
 build*/
 export/
 cache/
+__pycache__
 
+# EDITORS
 .vagrant/
-
-# IDE
 .vs/
 .vscode/
 .cache/
