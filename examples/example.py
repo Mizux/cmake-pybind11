@@ -1,9 +1,9 @@
-import cmakepybind11
-from cmakepybind11.foo import pyFoo
-from cmakepybind11.bar import pyBar
-from cmakepybind11.foobar import pyFooBar
+import cmpb11
+from cmpb11.foo.python import pyFoo
+from cmpb11.bar.python import pyBar
+from cmpb11.foobar.python import pyFooBar
 
-print(f'version: {cmakepybind11.__version__}')
+print(f'version: {cmpb11.__version__}')
 
 # foo
 print(f'Foo: {dir(pyFoo.Foo)}')

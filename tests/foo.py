@@ -2,14 +2,15 @@
 '''Test APIs'''
 
 import unittest
-import cmakepybind11
-from cmakepybind11.foo import pyFoo
-#import cmakepybind11.foo.pyFoo as foo
+import cmpb11
+from cmpb11.foo.python import pyFoo
+#import cmpb11.foo.python.pyFoo as foo
 
 if __debug__:
-    print(f'version: {cmakepybind11.__version__}')
-    print(f'cmakepybind11: ${dir(cmakepybind11)}')
-    print(f'cmakepybind11.foo: ${dir(cmakepybind11.foo)}')
+    print(f'version: {cmpb11.__version__}')
+    print(f'cmpb11: ${dir(cmpb11)}')
+    print(f'cmpb11.foo: ${dir(cmpb11.foo)}')
+    print(f'cmpb11.foo.python: ${dir(cmpb11.foo.python)}')
     print(f'pyFoo: ${dir(pyFoo)}')
 
 

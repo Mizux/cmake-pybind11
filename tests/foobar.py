@@ -2,14 +2,15 @@
 '''Test APIs'''
 
 import unittest
-import cmakepybind11
-from cmakepybind11.foobar import pyFooBar
-#import cmakepybind11.foobar.pyFooBar as foobar
+import cmpb11
+from cmpb11.foobar.python import pyFooBar
+#import cmpb11.foobar.python.pyFooBar as foobar
 
 if __debug__:
-    print(f'version: {cmakepybind11.__version__}')
-    print(f'cmakepybind11: ${dir(cmakepybind11)}')
-    print(f'cmakepybind11.foobar: ${dir(cmakepybind11.foobar)}')
+    print(f'version: {cmpb11.__version__}')
+    print(f'cmpb11: ${dir(cmpb11)}')
+    print(f'cmpb11.foobar: ${dir(cmpb11.foobar)}')
+    print(f'cmpb11.foobar.python: ${dir(cmpb11.foobar.python)}')
     print(f'pyFooBar: ${dir(pyFooBar)}')
 
 
