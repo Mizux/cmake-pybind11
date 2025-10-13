@@ -74,22 +74,33 @@ endif()
 # Enable CCache if any
 include(ccache)
 
+# Build deps
+
 # Disable CTest targets
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
 if(BUILD_TESTING)
-  option(BUILD_googletest "Build googletest" ON)
+  option(BUILD_absl "Build the abseil-cpp dependency Library" ON)
+  option(BUILD_re2 "Build the RE2 dependency Library" ON)
+  option(BUILD_googletest "Build the googletest dependency Library" ON)
 else()
+  set(BUILD_absl OFF)
+  set(BUILD_re2 OFF)
   set(BUILD_googletest OFF)
 endif()
+message(STATUS "Build absl: ${BUILD_absl}")
+message(STATUS "Build re2: ${BUILD_re2}")
 message(STATUS "Build googletest: ${BUILD_googletest}")
 
 option(BUILD_pybind11 "Build pybind11 library" ON)
 message(STATUS "Build pybind11: ${BUILD_pybind11}")
 
+option(GENERATE_PYTHON_STUB "Generate Python stub file (.pyi)" ON)
+message(STATUS "Python: Generate stub file: ${GENERATE_PYTHON_STUB}")
+
 option(FETCH_PYTHON_DEPS "Install python required modules if not available" ON)
-message(STATUS "Python fetch dependencies: ${FETCH_PYTHON_DEPS}")
+message(STATUS "Python: Fetch dependencies: ${FETCH_PYTHON_DEPS}")
 
 option(VENV_USE_SYSTEM_SITE_PACKAGES "Python venv can use system site packages" OFF)
 message(STATUS "Python: Allow venv to use system site packages: ${VENV_USE_SYSTEM_SITE_PACKAGES}")
