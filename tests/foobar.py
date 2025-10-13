@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-'''Test APIs'''
+"""Test APIs"""
 
 import unittest
 import cmpb11
 from cmpb11.foobar.python import pyFooBar
-#import cmpb11.foobar.python.pyFooBar as foobar
+
+# import cmpb11.foobar.python.pyFooBar as foobar
 
 if __debug__:
-    print(f'version: {cmpb11.__version__}')
-    print(f'cmpb11: ${dir(cmpb11)}')
-    print(f'cmpb11.foobar: ${dir(cmpb11.foobar)}')
-    print(f'cmpb11.foobar.python: ${dir(cmpb11.foobar.python)}')
-    print(f'pyFooBar: ${dir(pyFooBar)}')
+    print(f"version: {cmpb11.__version__}")
+    print(f"cmpb11: ${dir(cmpb11)}")
+    print(f"cmpb11.foobar: ${dir(cmpb11.foobar)}")
+    print(f"cmpb11.foobar.python: ${dir(cmpb11.foobar.python)}")
+    print(f"pyFooBar: ${dir(pyFooBar)}")
 
 
 class TestpyFooBar(unittest.TestCase):
-    '''Test pyFooBar'''
+    """Test pyFooBar"""
+
     def test_free_function(self):
         pyFooBar.free_function(2147483647)  # max int
         pyFooBar.free_function(2147483647 + 1)  # max int + 1
@@ -23,8 +25,7 @@ class TestpyFooBar(unittest.TestCase):
     def test_string_vector(self):
         self.assertEqual(4, pyFooBar.string_vector_input(["1", "2", "3", "4"]))
 
-        self.assertEqual(
-            5, pyFooBar.string_vector_ref_input(["1", "2", "3", "4", "5"]))
+        self.assertEqual(5, pyFooBar.string_vector_ref_input(["1", "2", "3", "4", "5"]))
 
         res = pyFooBar.string_vector_output(3)
         if __debug__:
@@ -33,14 +34,15 @@ class TestpyFooBar(unittest.TestCase):
 
     def test_string_jagged_array(self):
         self.assertEqual(
-            3,
-            pyFooBar.string_jagged_array_input([['1'], ['2', '3'],
-                                                ['4', '5', '6']]))
+            3, pyFooBar.string_jagged_array_input([["1"], ["2", "3"], ["4", "5", "6"]])
+        )
 
         self.assertEqual(
             4,
-            pyFooBar.string_jagged_array_ref_input([['1'], ['2', '3'],
-                                                ['4', '5', '6'], ['7']]))
+            pyFooBar.string_jagged_array_ref_input(
+                [["1"], ["2", "3"], ["4", "5", "6"], ["7"]]
+            ),
+        )
 
         v = pyFooBar.string_jagged_array_output(5)
         self.assertEqual(5, len(v))
@@ -50,8 +52,7 @@ class TestpyFooBar(unittest.TestCase):
     def test_pair_vector(self):
         self.assertEqual(3, pyFooBar.pair_vector_input([(1, 2), (3, 4), (5, 6)]))
 
-        self.assertEqual(3,
-                         pyFooBar.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
+        self.assertEqual(3, pyFooBar.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
 
         res = pyFooBar.pair_vector_output(3)
         if __debug__:
@@ -60,10 +61,12 @@ class TestpyFooBar(unittest.TestCase):
 
     def test_pair_jagged_array(self):
         self.assertEqual(
-            2, pyFooBar.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
+            2, pyFooBar.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]])
+        )
 
         self.assertEqual(
-            2, pyFooBar.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]]))
+            2, pyFooBar.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]])
+        )
 
         res = pyFooBar.pair_jagged_array_output(5)
         if __debug__:
@@ -75,7 +78,7 @@ class TestpyFooBar(unittest.TestCase):
     def test_pyFooBar_static_methods(self):
         f = pyFooBar.FooBar()
         if __debug__:
-            print(f'class FooBar: ${dir(f)}')
+            print(f"class FooBar: ${dir(f)}")
         f.static_function(1)
         f.static_function(2147483647)
         f.static_function(2147483647 + 1)
@@ -93,5 +96,5 @@ class TestpyFooBar(unittest.TestCase):
         self.assertEqual(68, f.int64)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

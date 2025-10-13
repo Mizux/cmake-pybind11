@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
-'''Test APIs'''
+"""Test APIs"""
 
 import unittest
 import cmpb11
 from cmpb11.bar.python import pyBar
-#import cmpb11.bar.python.pyBar as bar
+
+# import cmpb11.bar.python.pyBar as bar
 
 if __debug__:
-    print(f'version: {cmpb11.__version__}')
-    print(f'cmpb11: ${dir(cmpb11)}')
-    print(f'cmpb11.bar: ${dir(cmpb11.bar)}')
-    print(f'cmpb11.bar.python: ${dir(cmpb11.bar.python)}')
-    print(f'pyBar: ${dir(pyBar)}')
+    print(f"version: {cmpb11.__version__}")
+    print(f"cmpb11: ${dir(cmpb11)}")
+    print(f"cmpb11.bar: ${dir(cmpb11.bar)}")
+    print(f"cmpb11.bar.python: ${dir(cmpb11.bar.python)}")
+    print(f"pyBar: ${dir(pyBar)}")
 
 
 class TestpyBar(unittest.TestCase):
-    '''Test pyBar'''
+    """Test pyBar"""
+
     def test_free_function(self):
-        pyBar.free_function(2147483647) # max int
-        pyBar.free_function(2147483647+1) # max int + 1
+        pyBar.free_function(2147483647)  # max int
+        pyBar.free_function(2147483647 + 1)  # max int + 1
 
     def test_string_vector(self):
         self.assertEqual(4, pyBar.string_vector_input(["1", "2", "3", "4"]))
 
-        self.assertEqual(
-            5, pyBar.string_vector_ref_input(["1", "2", "3", "4", "5"]))
+        self.assertEqual(5, pyBar.string_vector_ref_input(["1", "2", "3", "4", "5"]))
 
         res = pyBar.string_vector_output(3)
         if __debug__:
@@ -33,14 +34,15 @@ class TestpyBar(unittest.TestCase):
 
     def test_string_jagged_array(self):
         self.assertEqual(
-            3,
-            pyBar.string_jagged_array_input([['1'], ['2', '3'],
-                                             ['4', '5', '6']]))
+            3, pyBar.string_jagged_array_input([["1"], ["2", "3"], ["4", "5", "6"]])
+        )
 
         self.assertEqual(
             4,
-            pyBar.string_jagged_array_ref_input([['1'], ['2', '3'],
-                                                 ['4', '5', '6'], ['7']]))
+            pyBar.string_jagged_array_ref_input(
+                [["1"], ["2", "3"], ["4", "5", "6"], ["7"]]
+            ),
+        )
 
         v = pyBar.string_jagged_array_output(5)
         self.assertEqual(5, len(v))
@@ -50,8 +52,7 @@ class TestpyBar(unittest.TestCase):
     def test_pair_vector(self):
         self.assertEqual(3, pyBar.pair_vector_input([(1, 2), (3, 4), (5, 6)]))
 
-        self.assertEqual(3,
-                         pyBar.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
+        self.assertEqual(3, pyBar.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
 
         res = pyBar.pair_vector_output(3)
         if __debug__:
@@ -59,11 +60,11 @@ class TestpyBar(unittest.TestCase):
         self.assertEqual(3, len(res))
 
     def test_pair_jagged_array(self):
-        self.assertEqual(
-            2, pyBar.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
+        self.assertEqual(2, pyBar.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
 
         self.assertEqual(
-            2, pyBar.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]]))
+            2, pyBar.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]])
+        )
 
         res = pyBar.pair_jagged_array_output(5)
         if __debug__:
@@ -75,7 +76,7 @@ class TestpyBar(unittest.TestCase):
     def test_pyBar_static_methods(self):
         f = pyBar.Bar()
         if __debug__:
-            print(f'class Bar: ${dir(f)}')
+            print(f"class Bar: ${dir(f)}")
         f.static_function(1)
         f.static_function(2147483647)
         f.static_function(2147483647 + 1)
@@ -95,5 +96,5 @@ class TestpyBar(unittest.TestCase):
         self.assertEqual(f.int64, 42)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

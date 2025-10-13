@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-'''Test APIs'''
+"""Test APIs"""
 
 import unittest
 import cmpb11
 from cmpb11.foo.python import pyFoo
-#import cmpb11.foo.python.pyFoo as foo
+
+# import cmpb11.foo.python.pyFoo as foo
 
 if __debug__:
-    print(f'version: {cmpb11.__version__}')
-    print(f'cmpb11: ${dir(cmpb11)}')
-    print(f'cmpb11.foo: ${dir(cmpb11.foo)}')
-    print(f'cmpb11.foo.python: ${dir(cmpb11.foo.python)}')
-    print(f'pyFoo: ${dir(pyFoo)}')
+    print(f"version: {cmpb11.__version__}")
+    print(f"cmpb11: ${dir(cmpb11)}")
+    print(f"cmpb11.foo: ${dir(cmpb11.foo)}")
+    print(f"cmpb11.foo.python: ${dir(cmpb11.foo.python)}")
+    print(f"pyFoo: ${dir(pyFoo)}")
 
 
 class TestpyFoo(unittest.TestCase):
-    '''Test pyFoo'''
+    """Test pyFoo"""
+
     def test_free_function(self):
         pyFoo.free_function(2147483647)  # max int
         pyFoo.free_function(2147483647 + 1)  # max int + 1
@@ -23,8 +25,7 @@ class TestpyFoo(unittest.TestCase):
     def test_string_vector(self):
         self.assertEqual(4, pyFoo.string_vector_input(["1", "2", "3", "4"]))
 
-        self.assertEqual(
-            5, pyFoo.string_vector_ref_input(["1", "2", "3", "4", "5"]))
+        self.assertEqual(5, pyFoo.string_vector_ref_input(["1", "2", "3", "4", "5"]))
 
         res = pyFoo.string_vector_output(3)
         if __debug__:
@@ -33,14 +34,15 @@ class TestpyFoo(unittest.TestCase):
 
     def test_string_jagged_array(self):
         self.assertEqual(
-            3,
-            pyFoo.string_jagged_array_input([['1'], ['2', '3'],
-                                             ['4', '5', '6']]))
+            3, pyFoo.string_jagged_array_input([["1"], ["2", "3"], ["4", "5", "6"]])
+        )
 
         self.assertEqual(
             4,
-            pyFoo.string_jagged_array_ref_input([['1'], ['2', '3'],
-                                                 ['4', '5', '6'], ['7']]))
+            pyFoo.string_jagged_array_ref_input(
+                [["1"], ["2", "3"], ["4", "5", "6"], ["7"]]
+            ),
+        )
 
         v = pyFoo.string_jagged_array_output(5)
         self.assertEqual(5, len(v))
@@ -50,8 +52,7 @@ class TestpyFoo(unittest.TestCase):
     def test_pair_vector(self):
         self.assertEqual(3, pyFoo.pair_vector_input([(1, 2), (3, 4), (5, 6)]))
 
-        self.assertEqual(3,
-                         pyFoo.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
+        self.assertEqual(3, pyFoo.pair_vector_ref_input([(1, 2), (3, 4), (5, 6)]))
 
         res = pyFoo.pair_vector_output(3)
         if __debug__:
@@ -59,11 +60,11 @@ class TestpyFoo(unittest.TestCase):
         self.assertEqual(3, len(res))
 
     def test_pair_jagged_array(self):
-        self.assertEqual(
-            2, pyFoo.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
+        self.assertEqual(2, pyFoo.pair_jagged_array_input([[(1, 1)], [(2, 2), (2, 2)]]))
 
         self.assertEqual(
-            2, pyFoo.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]]))
+            2, pyFoo.pair_jagged_array_ref_input([[(1, 1)], [(2, 2), (2, 2)]])
+        )
 
         res = pyFoo.pair_jagged_array_output(5)
         if __debug__:
@@ -75,7 +76,7 @@ class TestpyFoo(unittest.TestCase):
     def test_pyFoo_static_methods(self):
         f = pyFoo.Foo()
         if __debug__:
-            print(f'class Foo: ${dir(f)}')
+            print(f"class Foo: ${dir(f)}")
         f.static_function(1)
         f.static_function(2147483647)
         f.static_function(2147483647 + 1)
@@ -95,5 +96,5 @@ class TestpyFoo(unittest.TestCase):
         self.assertEqual(42, f.int64)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)
