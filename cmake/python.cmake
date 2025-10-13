@@ -355,6 +355,36 @@ add_custom_command(
   WORKING_DIRECTORY python
   COMMAND_EXPAND_LISTS)
 
+# Generate Stub
+if(GENERATE_PYTHON_STUB)
+# Look for required python modules
+search_python_module(
+  NAME mypy
+  PACKAGE mypy
+  NO_VERSION)
+
+find_program(
+  stubgen_EXECUTABLE
+  NAMES stubgen stubgen.exe
+  REQUIRED
+)
+message(STATUS "Python: stubgen: ${stubgen_EXECUTABLE}")
+
+add_custom_command(
+  OUTPUT python/stub_timestamp
+  COMMAND ${CMAKE_COMMAND} -E remove -f stub_timestamp
+  COMMAND ${stubgen_EXECUTABLE} -p ${PYTHON_PROJECT}.foo.python.pyfoo --output .
+  COMMAND ${stubgen_EXECUTABLE} -p ${PYTHON_PROJECT}.bar.python.pyBar --output .
+  COMMAND ${stubgen_EXECUTABLE} -p ${PYTHON_PROJECT}.foobar.python.pyfoobar --output .
+  COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_BINARY_DIR}/python/stub_timestamp
+  MAIN_DEPENDENCY
+    python/setup.py.in
+  DEPENDS
+    python/libs_timestamp
+    python/pybind11_timestamp
+  WORKING_DIRECTORY python
+  COMMAND_EXPAND_LISTS)
+endif()
 
 # Look for required python modules
 search_python_module(
