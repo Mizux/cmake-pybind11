@@ -211,6 +211,86 @@ function(add_cxx_library)
 endfunction()
 
 ###################
+##  C++ Example  ##
+###################
+# add_cxx_example()
+# CMake function to generate and build C++ library.
+# Parameters:
+# NAME: CMake target name
+# [HEADERS]: List of headers files
+# SOURCES: List of source files
+# [COMPILE_DEFINITIONS]: List of private compile definitions
+# [COMPILE_OPTIONS]: List of private compile options
+# [LINK_LIBRARIES]: List of **public** libraries to use when linking
+# note: ortools::ortools is always linked to the target
+# [LINK_OPTIONS]: List of private link options
+# e.g.:
+# add_cxx_example(
+#   NAME
+#     foo
+#   HEADERS
+#     foo.h
+#   SOURCES
+#     foo.cc
+#     ${PROJECT_SOURCE_DIR}/Foo/foo.cc
+#   LINK_LIBRARIES
+#     GTest::gmock
+#     GTest::gtest_main
+# )
+function(add_cxx_example)
+  set(options "")
+  set(oneValueArgs "NAME;INSTALL_DIR")
+  set(multiValueArgs
+    "HEADERS;SOURCES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;LINK_LIBRARIES;LINK_OPTIONS")
+  cmake_parse_arguments(EXAMPLE
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
+  if(NOT BUILD_EXAMPLES)
+    return()
+  endif()
+
+  if(NOT EXAMPLE_NAME)
+    message(FATAL_ERROR "no NAME provided")
+  endif()
+  if(NOT EXAMPLE_SOURCES)
+    message(FATAL_ERROR "no SOURCES provided")
+  endif()
+  message(STATUS "Configuring library ${EXAMPLE_NAME} ...")
+  
+  add_executable(${EXAMPLE_NAME} "")
+  target_sources(${EXAMPLE_NAME} PRIVATE ${EXAMPLE_SOURCES})
+  target_include_directories(${EXAMPLE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+  target_compile_definitions(${EXAMPLE_NAME} PRIVATE ${EXAMPLE_COMPILE_DEFINITIONS})
+  target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_20)
+  target_compile_options(${EXAMPLE_NAME} PRIVATE ${EXAMPLE_COMPILE_OPTIONS})
+  target_link_libraries(${EXAMPLE_NAME} PRIVATE ${EXAMPLE_LINK_LIBRARIES})
+  target_link_options(${EXAMPLE_NAME} PRIVATE ${EXAMPLE_LINK_OPTIONS})
+
+  include(GNUInstallDirs)
+  if(APPLE)
+    set_target_properties(${EXAMPLE_NAME} PROPERTIES
+      INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR};@loader_path")
+  elseif(UNIX)
+    cmake_path(RELATIVE_PATH CMAKE_INSTALL_FULL_LIBDIR
+      BASE_DIRECTORY ${CMAKE_INSTALL_FULL_BINDIR}
+      OUTPUT_VARIABLE libdir_relative_path)
+    set_target_properties(${EXAMPLE_NAME} PROPERTIES
+      INSTALL_RPATH "$ORIGIN/${libdir_relative_path}:$ORIGIN")
+  endif()
+
+  install(TARGETS ${EXAMPLE_NAME})
+  add_test(
+    NAME cxx_${EXAMPLE_NAME}
+    COMMAND ${EXAMPLE_NAME}
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  )
+  message(STATUS "Configuring example ${EXAMPLE_NAME}: ...DONE")
+endfunction()
+
+###################
 ## CMake Install ##
 ###################
 include(GNUInstallDirs)
@@ -238,39 +318,3 @@ install(
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
   COMPONENT Devel)
-
-# add_cpp_example()
-# CMake function to generate and build C++ example.
-# Parameters:
-#  the C++ filename
-# e.g.:
-# add_cpp_example(foo.cpp)
-function(add_cpp_example FILE_NAME)
-  message(STATUS "Configuring example ${FILE_NAME}: ...")
-  get_filename_component(EXAMPLE_NAME ${FILE_NAME} NAME_WE)
-  get_filename_component(COMPONENT_DIR ${FILE_NAME} DIRECTORY)
-  get_filename_component(COMPONENT_NAME ${COMPONENT_DIR} NAME)
-
-  if(APPLE)
-    set(CMAKE_INSTALL_RPATH
-      "@loader_path/../${CMAKE_INSTALL_LIBDIR};@loader_path")
-  elseif(UNIX)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}:$ORIGIN")
-  endif()
-
-  add_executable(${EXAMPLE_NAME} ${FILE_NAME})
-  target_include_directories(${EXAMPLE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-  target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_17)
-  target_link_libraries(${EXAMPLE_NAME} PRIVATE
-    ${PROJECT_NAMESPACE}::Foo
-    ${PROJECT_NAMESPACE}::Bar
-    ${PROJECT_NAMESPACE}::FooBar)
-
-  include(GNUInstallDirs)
-  install(TARGETS ${EXAMPLE_NAME})
-
-  if(BUILD_TESTING)
-    add_test(NAME cpp_${COMPONENT_NAME}_${EXAMPLE_NAME} COMMAND ${EXAMPLE_NAME})
-  endif()
-  message(STATUS "Configuring example ${FILE_NAME}: ...DONE")
-endfunction()
