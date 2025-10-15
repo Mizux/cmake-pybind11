@@ -263,7 +263,7 @@ add_custom_command(
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_globals>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_initialize>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_check_op>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_conditions>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_conditions>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_fnmatch>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_format>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_globals>>
