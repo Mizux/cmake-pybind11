@@ -224,7 +224,7 @@ add_custom_command(
     $<IF:$<BOOL:${BUILD_absl}>,copy,true>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::base>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::city>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::civil_time>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::civil_time>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::cord>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::cord_internal>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::cordz_functions>>
@@ -252,19 +252,19 @@ add_custom_command(
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::flags_reflection>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::flags_usage>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::flags_usage_internal>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::graphcycles_internal>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::graphcycles_internal>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::hash>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::hashtablez_sampler>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::int128>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::kernel_timeout_internal>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::leak_check>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_entry>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_entry>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_flags>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_globals>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_initialize>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_check_op>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_conditions>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_fnmatch>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_fnmatch>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_format>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_globals>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_log_sink_set>>
@@ -272,7 +272,7 @@ add_custom_command(
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_message>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_nullguard>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_internal_proto>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_severity>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_severity>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::log_sink>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::malloc_internal>>
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::random_distributions>>
@@ -293,17 +293,17 @@ add_custom_command(
     #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::statusor>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::str_format_internal>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::strerror>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::string_view>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::string_view>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::strings>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::strings_internal>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::symbolize>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::synchronization>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::throw_delegate>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::throw_delegate>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::time>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::time_zone>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::tracing_internal>>
     $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::utf8_for_code_point>>
-    #$<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::vlog_config_internal>>
+    $<${need_unix_absl_lib}:$<TARGET_SONAME_FILE:absl::vlog_config_internal>>
     $<${need_windows_absl_lib}:$<TARGET_FILE:absl::abseil_dll>>
     ${PYTHON_PROJECT}/.libs
 
