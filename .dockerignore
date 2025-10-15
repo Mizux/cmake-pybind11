@@ -18,14 +18,17 @@ cmake/docs
 cmake/README.md
 
 # CI
+ci/README.md
 ci/Makefile
 ci/docker
 ci/docs
 ci/cache
+ci/vagrant
 
 # Native build
 .cache/
 .vagrant/
+*/__pycache__
 build/
 build*/
 cache/
