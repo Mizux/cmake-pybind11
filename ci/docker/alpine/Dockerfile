@@ -8,8 +8,9 @@ RUN apk add --no-cache git build-base linux-headers cmake
 
 # Install Python
 RUN apk add --no-cache \
- python3-dev py3-pip py3-wheel \
- py3-virtualenv
+ python3 python3-dev py3-pip py3-wheel \
+ py3-virtualenv \
+ py3-mypy
 
 # Add the library src to our build env
 FROM env AS devel
