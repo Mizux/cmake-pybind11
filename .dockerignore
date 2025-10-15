@@ -28,7 +28,7 @@ ci/vagrant
 # Native build
 .cache/
 .vagrant/
-*/__pycache__
+**/__pycache__
 build/
 build*/
 cache/
