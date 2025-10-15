@@ -12,10 +12,12 @@ RUN dnf -y update \
 CMD [ "/usr/bin/bash" ]
 
 RUN dnf -y update \
-&& dnf -y install python3-devel python3-pip python3-numpy \
+&& dnf -y install python3-devel python3-pip \
+ python3-numpy \
 && dnf clean all \
 && rm -rf /var/cache/dnf
-RUN python3 -m pip install mypy
+RUN python3 -m pip install \
+ mypy
 
 # Add the library src to our build env
 FROM env AS devel
@@ -34,9 +36,9 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install \
- --find-links=. \
- cmakepybind11*.whl
+RUN python3 -m pip install --find-links=. \
+ cmpb11*.whl
+RUN python3 -m pip show cmpb11
 
 FROM install_env AS install_devel
 WORKDIR /home/samples

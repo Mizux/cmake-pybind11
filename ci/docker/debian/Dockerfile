@@ -1,6 +1,6 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/debian
-FROM debian:unstable AS env
+FROM debian:latest AS env
 
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
@@ -39,10 +39,8 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 # Test install rules
 FROM env AS install_env
 COPY --from=build /home/project/build/python/dist/*.whl ./
-RUN python3 -m pip install \
- --break-system-packages \
- --find-links=. \
- cmakepybind11*.whl
+RUN python3 -m pip install --break-system-packages --find-links=. \
+ cmpb11*.whl
 
 FROM install_env AS install_devel
 WORKDIR /home/samples

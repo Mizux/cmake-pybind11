@@ -21,7 +21,7 @@ CMD ["/usr/bin/bash"]
 FROM env AS devel
 WORKDIR /home/project
 COPY . .
-COPY ./ci/docker/arm64v8/manylinux/build-manylinux.sh .
+COPY ./ci/docker/manylinux/build-manylinux.sh .
 
 FROM devel AS build
 RUN ./build-manylinux.sh build
@@ -29,11 +29,16 @@ RUN ./build-manylinux.sh build
 FROM build AS test
 RUN ./build-manylinux.sh test
 
-FROM env AS install_env
+FROM ubuntu:latest AS install_env
+RUN apt update -q \
+&& apt install -yq python3-dev python3-pip \
+&& apt clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 COPY --from=build /home/project/build*/python/dist/*.whl ./
-RUN python3 -m pip install \
- --find-links=. \
- cmakepybind11*.whl
+RUN python3 -m pip install --break-system-packages --find-links=. \
+ cmpb11*.whl
+RUN python3 -m pip show cmpb11
 
 FROM install_env AS install_devel
 WORKDIR /home/sample
