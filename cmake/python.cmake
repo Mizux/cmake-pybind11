@@ -121,6 +121,10 @@ endif()
 #     foo
 # )
 function(add_python_test)
+  if(NOT BUILD_TESTING)
+   return()
+  endif()
+
   set(options "")
   set(oneValueArgs FILE_NAME)
   set(multiValueArgs "")
@@ -137,12 +141,10 @@ function(add_python_test)
 
   message(STATUS "Configuring test ${TEST_FILE_NAME} ...")
 
-  if(BUILD_TESTING)
-    add_test(
-      NAME python_test_${TEST_NAME}
-      COMMAND ${VENV_Python3_EXECUTABLE} -m pytest ${TEST_FILE_NAME}
-      WORKING_DIRECTORY ${VENV_DIR})
-  endif()
+  add_test(
+    NAME python_test_${TEST_NAME}
+    COMMAND ${VENV_Python3_EXECUTABLE} -m pytest ${TEST_FILE_NAME}
+    WORKING_DIRECTORY ${VENV_DIR})
   message(STATUS "Configuring test ${TEST_FILE_NAME} ...DONE")
 endfunction()
 
@@ -450,18 +452,36 @@ endif()
 # add_python_example()
 # CMake function to generate and build python example.
 # Parameters:
-#  the python filename
+#  FILE_NAME: the Python filename
 # e.g.:
-# add_python_example(foo.py)
-function(add_python_example FILE_NAME)
-  message(STATUS "Configuring example ${FILE_NAME} ...")
-  get_filename_component(EXAMPLE_NAME ${FILE_NAME} NAME_WE)
-
-  if(BUILD_TESTING)
-    add_test(
-      NAME python_example_${EXAMPLE_NAME}
-      COMMAND ${VENV_Python3_EXECUTABLE} ${FILE_NAME}
-      WORKING_DIRECTORY ${VENV_DIR})
+# add_python_example(
+#   FILE_NAME
+#     foo.py
+# )
+function(add_python_example)
+  if(NOT BUILD_TESTING)
+    return()
   endif()
-  message(STATUS "Configuring example ${FILE_NAME} done")
+
+  set(options "")
+  set(oneValueArgs FILE_NAME)
+  set(multiValueArgs "")
+  cmake_parse_arguments(EXAMPLE
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
+  if(NOT EXAMPLE_FILE_NAME)
+    message(FATAL_ERROR "no FILE_NAME provided")
+  endif()
+  get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE_NAME} NAME_WE)
+
+  message(STATUS "Configuring example ${EXAMPLE_FILE_NAME} ...")
+
+  add_test(
+    NAME python_example_${EXAMPLE_NAME}
+    COMMAND ${VENV_Python3_EXECUTABLE} ${EXAMPLE_FILE_NAME}
+    WORKING_DIRECTORY ${VENV_DIR})
+  message(STATUS "Configuring example ${EXAMPLE_FILE_NAME} ...DONE")
 endfunction()
