@@ -35,7 +35,7 @@ jobs:
       deps_build_key: arm64_macos_deps_build_${{matrix.cmake.name}}
       ccache_key: arm64_macos_ccache_${{matrix.cmake.name}}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
@@ -51,19 +51,19 @@ jobs:
 
       # CONFIGURING CACHES
       - name: Cache CMake dependency source code
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{env.deps_src_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
           path: ${{github.workspace}}/build/_deps/*-src
       - name: Cache CMake dependency build
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{env.deps_build_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
           path: |
             ${{github.workspace}}/build/_deps/*-build
             ${{github.workspace}}/build/_deps/*-subbuild
       - name: Cache CCache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{env.ccache_key}}-${{github.sha}}
           restore-keys: |
@@ -107,4 +107,4 @@ jobs:
     runs-on: ubuntu-latest
     needs: native
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
